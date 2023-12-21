@@ -1,11 +1,13 @@
 //import logo from './logo.svg';
 import './App.css';
 import React from 'react';
-import config from './clientConfig.json'
+
+import config from './clientConfig.json';
+import language from './language.json';
+import plusSign from './plus.png'
 
 function ListaDeTablas(tablas) {
 	const lista = [];
-
 	tablas.forEach(row => {
 		const tableName = row.table_name;
 		lista.push(
@@ -15,9 +17,7 @@ function ListaDeTablas(tablas) {
 		);
 	});
 
-	return (
-		<div id="lista-tablas">{lista}</div>
-	);
+	return lista;
 }
 
 function Tabla(tabla) {
@@ -26,16 +26,16 @@ function Tabla(tabla) {
 	);
 }
 
+
+
+
+
 function App() {
+	const [lang, setLanguage] = React.useState(language.en);
 	const [tableList, setTableList] = React.useState(null);
 	const [currentTable, setCurrentTable] = React.useState(null);
 
-	const NewTableButton = () => {
-		const handleClick = async () => {
-			/*Put something here*/
-		};
-		return <button onClick={handleClick}>Create New Table</button>;
-	}
+
 
 	React.useEffect(() => {
 		setCurrentTable(null);
@@ -53,17 +53,45 @@ function App() {
 	return (
 		<div className="App">
 			<header className="App-header">
+				<LanguageSelector />
 				{/* <img src={logo} className="App-logo" alt="logo" /> */}
-				<h1>Administrador de Inventario</h1>
+				<h1>{lang.title}</h1>
 			</header>
+
 			<div className='App-main'>
-				{currentTable ? Tabla(currentTable) :
-					(tableList ? ListaDeTablas(tableList) :
-						<p>"Loading..."</p>)}
-				<NewTableButton />
+				<div id="lista-tablas">
+					{currentTable ? Tabla(currentTable) :
+						(tableList ? ListaDeTablas(tableList) :
+							<p>{lang.loading}</p>)}
+					<NewTableButton />
+				</div>
 			</div>
 		</div>
 	);
+
+	function NewTableButton() {
+		const createTable = async () => {
+			/*I'll implement this later*/
+		};
+		return <button id="new-table-button" onClick={createTable}>+</button>;
+	}
+
+	function LanguageSelector() {
+		const changeLanguage = (event) => {
+			const selectedLanguage = event.target.value;
+			setLanguage(language[selectedLanguage]);
+		}
+
+		return (
+			<div id="language-selection">
+				<p>{lang.language}</p>
+				<select onChange={changeLanguage}>
+					<option value="en">English</option>
+					<option value="es">Español</option>
+				</select>
+			</div>
+		)
+	}
 }
 
 export default App;

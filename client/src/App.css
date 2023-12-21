@@ -1,7 +1,7 @@
 body {
   background-color: #202020;
   --text-color: #D0D0D0;
-
+  --element-background-color: #505050;
   color: var(--text-color);
 }
 
@@ -16,6 +16,19 @@ body {
 
 }
 
+#language-selection {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#language-selection p {
+  font-size: 15px;
+
+  display: inline;
+  margin: 5px;
+}
+
 .App-header {
 
   display: flex;
@@ -23,7 +36,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: var(--text-color);
 }
 
 .App-main {
@@ -40,9 +53,19 @@ body {
 }
 
 #lista-tablas {
+  --item-margin: 10px;
+
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+}
+
+#lista-tablas *:hover {
+  --hover-text-color: cyan;
+
+  color: var(--hover-text-color);
+  border-color: var(--hover-text-color);
 }
 
 .link-tabla {
@@ -53,12 +76,12 @@ body {
   text-align: center;
   vertical-align: middle;
 
-  margin: 10px;
+  margin: var(--item-margin);
   width: 200px;
   height: var(--height);
   line-height: var(--height);
 
-  background-color: #505050;
+  background-color: var(--element-background-color);
 
   border-width: 4px;
   border-style: solid;
@@ -66,11 +89,22 @@ body {
   border-radius: 2.5px;
 }
 
-.link-tabla:hover {
-  --hover-text-color: cyan;
+#new-table-button {
+  --side-length: 50px;
 
-  color: var(--hover-text-color);
-  border-color: var(--hover-text-color);
+  margin-left: var(--item-margin);
+  width: var(--side-length);
+  height: var(--side-length);
+  border-radius: 50%;
+
+  font-size: 35px;
+
+  color: inherit;
+
+  background-color: var(--element-background-color);
+  border-width: 3px;
+  border-style: solid;
+  border-color: var(--text-color);
 }
 
 /* .App-logo {

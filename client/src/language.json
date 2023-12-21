@@ -1,0 +1,14 @@
+{
+	"en": {
+		"title": "Inventory Manager",
+		"loading": "Loading...",
+		"language": "Language: ",
+		"newTableAltText": "Create new table"
+	},
+	"es":{
+		"title": "Administrador de Inventario",
+		"loading": "Cargando...",
+		"language": "Lenguage: ",
+		"newTableAltText": "Crear tabla nueva"
+	}
+}
