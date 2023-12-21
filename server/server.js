@@ -19,6 +19,7 @@ const pool = new Pool({
 });
 
 // Middleware to parse request bodies
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Serving static files from the 'public' directory

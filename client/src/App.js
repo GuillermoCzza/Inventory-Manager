@@ -4,14 +4,13 @@ import React from 'react';
 
 import config from './clientConfig.json';
 import language from './language.json';
-import plusSign from './plus.png'
 
 function ListaDeTablas(tablas) {
 	const lista = [];
 	tablas.forEach(row => {
 		const tableName = row.table_name;
 		lista.push(
-			<a href={`${config.SERVER_ADDRESS}/tables/${tableName}`} className="link-tabla">
+			<a key={tableName} href={`${config.SERVER_ADDRESS}/tables/${tableName}`} className="link-tabla">
 				{row.table_name}
 			</a>
 		);
@@ -44,7 +43,6 @@ function App() {
 				return res.json();
 			})
 			.then(data => {
-				console.log(data.rows);
 				setTableList(data.rows);
 			})
 			.catch(err => console.error("An error has ocurred: ", err));
@@ -71,7 +69,22 @@ function App() {
 
 	function NewTableButton() {
 		const createTable = async () => {
-			/*I'll implement this later*/
+			const newTableName = prompt(lang.newTablePrompt)
+			await fetch(`${config.SERVER_ADDRESS}/tables`, {
+				method: "POST",
+				redirect: 'follow',
+				body: JSON.stringify({
+					tableName: newTableName
+				}),
+				headers: {
+					"Content-type": "application/json; charset=UTF-8"
+				}
+			})
+				.then(res => res.json())
+				.then(data => {
+					setTableList(data.rows);
+				})
+				.catch(err => { alert(lang.error + err) });
 		};
 		return <button id="new-table-button" onClick={createTable}>+</button>;
 	}
@@ -85,7 +98,7 @@ function App() {
 		return (
 			<div id="language-selection">
 				<p>{lang.language}</p>
-				<select onChange={changeLanguage}>
+				<select value={lang.code} onChange={changeLanguage}>
 					<option value="en">English</option>
 					<option value="es">Español</option>
 				</select>

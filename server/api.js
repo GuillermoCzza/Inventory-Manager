@@ -43,7 +43,7 @@ module.exports = (app, pool) => {
 
 			//tables are created from template table to have the same column types
 			await pool.query(`CREATE TABLE ${escapedIdentifier} (LIKE ${config.TEMPLATE_TABLE_NAME} INCLUDING ALL)`);
-			res.redirect(`/tables/${escapedIdentifier}`);
+			res.redirect(`/tables`);
 		} catch (err) {
 			console.log('error al POST una tabla');
 			console.error(err);

@@ -1,14 +1,18 @@
 {
 	"en": {
+		"code": "en",
 		"title": "Inventory Manager",
 		"loading": "Loading...",
 		"language": "Language: ",
-		"newTableAltText": "Create new table"
+		"newTablePrompt": "Please enter the table name:",
+		"error": "An error has occurred: "
 	},
 	"es":{
+		"code": "es",
 		"title": "Administrador de Inventario",
 		"loading": "Cargando...",
 		"language": "Lenguage: ",
-		"newTableAltText": "Crear tabla nueva"
+		"newTablePrompt": "Introduzca el nombre de la tabla:",
+		"error": "Se produjo un error: "
 	}
 }
