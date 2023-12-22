@@ -5,19 +5,7 @@ import React from 'react';
 import config from './clientConfig.json';
 import language from './language.json';
 
-function ListaDeTablas(tablas) {
-	const lista = [];
-	tablas.forEach(row => {
-		const tableName = row.table_name;
-		lista.push(
-			<a key={tableName} href={`${config.SERVER_ADDRESS}/tables/${tableName}`} className="link-tabla">
-				{row.table_name}
-			</a>
-		);
-	});
 
-	return lista;
-}
 
 function Tabla(tabla) {
 	return (
@@ -33,8 +21,7 @@ function App() {
 	const [lang, setLanguage] = React.useState(language.en);
 	const [tableList, setTableList] = React.useState(null);
 	const [currentTable, setCurrentTable] = React.useState(null);
-
-
+	let [loadError, setLoadError] = React.useState(null);
 
 	React.useEffect(() => {
 		setCurrentTable(null);
@@ -45,8 +32,10 @@ function App() {
 			.then(data => {
 				setTableList(data.rows);
 			})
-			.catch(err => console.error("An error has ocurred: ", err));
-	}, []);
+			.catch(err => {
+				setLoadError(lang.error + err.toString());
+		});
+	}, [lang.error]);
 
 	return (
 		<div className="App">
@@ -60,12 +49,26 @@ function App() {
 				<div id="lista-tablas">
 					{currentTable ? Tabla(currentTable) :
 						(tableList ? ListaDeTablas(tableList) :
-							<p>{lang.loading}</p>)}
-					<NewTableButton />
+							(!loadError ? <p>{lang.loading}</p> : loadError))}
+
 				</div>
 			</div>
 		</div>
 	);
+
+	function ListaDeTablas(tablas) {
+		const lista = [];
+		tablas.forEach(row => {
+			const tableName = row.table_name;
+			lista.push(
+				<a key={tableName} href={`${config.SERVER_ADDRESS}/tables/${tableName}`} className="link-tabla">
+					{row.table_name}
+				</a>
+			);
+		});
+
+		return lista.concat(<NewTableButton />);
+	}
 
 	function NewTableButton() {
 		const createTable = async () => {
