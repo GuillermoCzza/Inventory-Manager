@@ -116,13 +116,10 @@
 
 .table-row{
   display: table-row;
-  
 }
 
 .table-cell{
   display:table-cell;
-
-  min-width: 100px;
   width: 100px;
   height: fit-content;
   padding: 5px 10px;
@@ -135,6 +132,10 @@
   border: 0;
   height: fit-content;
   text-wrap: wrap;
+}
+
+.table-cell input:focus{
+ outline: none;
 }
 
 /* .App-logo {
