@@ -87,7 +87,9 @@ module.exports = (app, pool) => {
 		const precio = req.body.precio;
 		const categoria = req.body.categoría;
 		try {
-			pool.query(`INSERT INTO ${tableName}(nombre, stock, precio, categoria) VALUES($1, $2, $3, $4)`, [nombre, stock, precio, categoria]);
+			await pool.query(`INSERT INTO ${tableName}(nombre, stock, precio, categoria) VALUES($1, $2, $3, $4)`, [nombre, stock, precio, categoria]);
+			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
+			res.json(tabla);
 		} catch (err) {
 			console.log('error al POST una fila');
 			console.error(err);

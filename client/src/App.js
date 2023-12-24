@@ -8,8 +8,42 @@ import language from './language.json';
 
 
 function Tabla(tabla) {
+	const columnOrder = []; //necessary to write values of rows in same order
+	const filas = []; //this will contain the JSX of all the rows
+
+	//create table headers and record column order for the fields
+	const headersJSX = []
+	tabla.fields.forEach(field => {
+		headersJSX.push(<div className='table-cell'><p>{field.name.toUpperCase()}</p></div>)
+		columnOrder.push(field.name);
+	});
+	filas.push(<div className='table-row table-headers'>{headersJSX}</div>);
+
+	//create each row
+	tabla.rows.forEach(row => {
+		const rowJSX = [];
+		const rowCellValues = Array(columnOrder.length);
+		for (const field in row) {
+			//put the field in the corresponding place in the row
+			rowCellValues[columnOrder.indexOf(field)] = row[field];
+		}
+
+		//actually write the JSX for the row with the ordered values
+		rowCellValues.forEach((value, index) => {
+			rowJSX.push(<div className='table-cell'><input name={rowCellValues[index]} value={value} type='text'></input></div>);
+		});
+
+		//add the JSX of each row to 'filas'
+		filas.push(<form action={`${config.SERVER_ADDRESS}/tables/${tabla.tableName}`} className='table-row' method="PUT">
+				{rowJSX}
+			</form>
+		);
+	});
+
 	return (
-		<p></p>
+		<div className='table'>
+			{filas}
+		</div>
 	);
 }
 
@@ -34,7 +68,7 @@ function App() {
 			})
 			.catch(err => {
 				setLoadError(lang.error + err.toString());
-		});
+			});
 	}, [lang.error]);
 
 	return (
@@ -46,30 +80,49 @@ function App() {
 			</header>
 
 			<div className='App-main'>
-				<div id="lista-tablas">
-					{currentTable ? Tabla(currentTable) :
-						(tableList ? ListaDeTablas(tableList) :
-							(!loadError ? <p>{lang.loading}</p> : loadError))}
 
-				</div>
+				{currentTable ? Tabla(currentTable) :
+					(tableList ? ListaDeTablas(tableList) :
+						(!loadError ? <p>{lang.loading}</p> : loadError))}
+
+
 			</div>
 		</div>
 	);
 
 	function ListaDeTablas(tablas) {
+		//each of the table buttons will call this on click
+		const loadTable = (event) => {
+			//get the table name from the button's table property, which is the table name in the db
+			const tableName = event.target.getAttribute('table');
+			//make a request and load the table
+			fetch(`${config.SERVER_ADDRESS}/tables/${tableName}`)
+				.then(res => res.json())
+				.then(data => {
+					data.tableName = tableName; //add tablename to table object so it can be retrieved in Tabla()
+					setCurrentTable(data);
+				})
+				.catch(err => {
+					alert(lang.error + err.toString());
+				});
+
+		}
+
+		//create the list of buttons to go to each table
 		const lista = [];
 		tablas.forEach(row => {
 			const tableName = row.table_name;
 			lista.push(
-				<a key={tableName} href={`${config.SERVER_ADDRESS}/tables/${tableName}`} className="link-tabla">
-					{row.table_name}
-				</a>
+				<button table={tableName} onClick={loadTable} className="link-tabla">
+					{tableName}
+				</button>
 			);
 		});
 
-		return lista.concat(<NewTableButton />);
+		return <div id="lista-tablas">{lista.concat(<NewTableButton />)}</div>;
 	}
 
+	//button to create a new table
 	function NewTableButton() {
 		const createTable = async () => {
 			const newTableName = prompt(lang.newTablePrompt)
@@ -89,9 +142,11 @@ function App() {
 				})
 				.catch(err => { alert(lang.error + err) });
 		};
+
 		return <button id="new-table-button" onClick={createTable}>+</button>;
 	}
 
+	//language change select element
 	function LanguageSelector() {
 		const changeLanguage = (event) => {
 			const selectedLanguage = event.target.value;
