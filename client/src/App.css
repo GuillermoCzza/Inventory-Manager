@@ -24,7 +24,7 @@
   right: 10px;
 }
 
-#language-selection p {
+#language-selection>p {
   font-size: 15px;
 
   display: inline;
@@ -63,7 +63,7 @@
   align-items: center;
 }
 
-#lista-tablas button:hover {
+#lista-tablas > button:hover {
   --hover-text-color: cyan;
 
   color: var(--hover-text-color);
@@ -108,18 +108,21 @@
   border-color: var(--text-color);
 }
 
-.table{
+.table {
   display: table;
-
   margin: auto;
 }
 
-.table-row{
+.table > p{
+  display: inline-block;
+}
+
+.table-row {
   display: table-row;
 }
 
-.table-cell{
-  display:table-cell;
+.table-cell {
+  display: table-cell;
   width: 100px;
   height: fit-content;
   padding: 5px 10px;
@@ -128,14 +131,14 @@
   vertical-align: middle;
 }
 
-.table-cell input{
+.table-cell > input {
   border: 0;
   height: fit-content;
   text-wrap: wrap;
 }
 
-.table-cell input:focus{
- outline: none;
+.table-cell > input:focus {
+  outline: none;
 }
 
 /* .App-logo {

@@ -80,12 +80,12 @@ module.exports = (app, pool) => {
 
 
 	//TODO: add row
-	app.put('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
+	app.post('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		const tableName = req.params.tableName;
 		const nombre = req.body.nombre;
 		const stock = req.body.stock;
 		const precio = req.body.precio;
-		const categoria = req.body.categoría;
+		const categoria = req.body.categoria;
 		try {
 			await pool.query(`INSERT INTO ${tableName}(nombre, stock, precio, categoria) VALUES($1, $2, $3, $4)`, [nombre, stock, precio, categoria]);
 			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
@@ -98,6 +98,29 @@ module.exports = (app, pool) => {
 	});
 
 	//TODO: modify row (the more generic the implementation, the better)
+	app.put('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
+		try {
+			const tableName = req.params.tableName;
+			console.log(req.body);
+			//TODO: escribir implementacion general del UPDATE con los parametros que hayan llegado
+		} catch (err) {
+			console.log('error al PUT (modificar) una fila');
+			console.error(err);
+			res.json({ error: err.toString() });
+		}
+
+		//res.json(req.body);
+		/*
+		try {
+			await pool.query(`UPDATE ${tableName}(nombre, stock, precio, categoria) VALUES($1, $2, $3, $4)`, [nombre, stock, precio, categoria]);
+			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
+			res.json(tabla);
+		} catch (err) {
+			console.log('error al POST una fila');
+			console.error(err);
+			res.json({ error: err.toString() });
+		}*/
+	});
 
 	//TODO: delete row
 };

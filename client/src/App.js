@@ -4,7 +4,9 @@ import React from 'react';
 
 import config from './clientConfig.json';
 import language from './language.json';
+
 import Tabla from './Tabla.js';
+import LanguageSelector from './LanguageSelector.js';
 
 
 function App() {
@@ -30,27 +32,28 @@ function App() {
 	return (
 		<div className="App">
 			<header className="App-header">
-				<LanguageSelector />
+				{LanguageSelector(lang, setLanguage)}
 				{/* <img src={logo} className="App-logo" alt="logo" /> */}
 				<h1>{lang.title}</h1>
 			</header>
 
 			<div className='App-main'>
-
-				{currentTable ? Tabla(currentTable) :
-					(tableList ? ListaDeTablas(tableList) :
-						(!loadError ? <p>{lang.loading}</p> : loadError))}
+				{
+					currentTable ? Tabla(currentTable, lang) : //si hay tabla elegida, mostrarla. Sino...
+						(tableList ? ListaDeTablas(tableList) : //si se consiguió la lista de tablas, mostrarla. Sino...
+							(!loadError ? <p>{lang.loading}</p> : loadError)) //si hubo un error al conseguir las listas, mostrarlo. Sino mostrar "loading..."
+				}
 
 
 			</div>
 		</div>
 	);
 
-	function ListaDeTablas(tablas) {
+	function ListaDeTablas() {
 		//each of the table buttons will call this on click
 		const loadTable = (event) => {
 			//get the table name from the button's table property, which is the table name in the db
-			const tableName = event.target.getAttribute('table');
+			const tableName = event.target.getAttribute('tabla');
 			//make a request and load the table
 			fetch(`${config.SERVER_ADDRESS}/tables/${tableName}`)
 				.then(res => res.json())
@@ -66,10 +69,10 @@ function App() {
 
 		//create the list of buttons to go to each table
 		const lista = [];
-		tablas.forEach(row => {
+		tableList.forEach(row => {
 			const tableName = row.table_name;
 			lista.push(
-				<button key={`${tableName}-table-button`} onClick={loadTable} className="link-tabla">
+				<button tabla={tableName} key={tableName} onClick={loadTable} className="link-tabla">
 					{tableName}
 				</button>
 			);
@@ -102,24 +105,6 @@ function App() {
 		};
 
 		return <button key="newTable-button" id="new-table-button" onClick={createTable}>+</button>;
-	}
-
-	//language change select element
-	function LanguageSelector() {
-		const changeLanguage = (event) => {
-			const selectedLanguage = event.target.value;
-			setLanguage(language[selectedLanguage]);
-		}
-
-		return (
-			<div id="language-selection">
-				<p>{lang.language}</p>
-				<select value={lang.code} onChange={changeLanguage}>
-					<option value="en">English</option>
-					<option value="es">Español</option>
-				</select>
-			</div>
-		)
 	}
 }
 

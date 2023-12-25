@@ -5,7 +5,8 @@
 		"loading": "Loading...",
 		"language": "Language: ",
 		"newTablePrompt": "Please enter the table name:",
-		"error": "An error has occurred: "
+		"error": "An error has occurred: ",
+		"emptyTable": "This table has no rows"
 	},
 	"es":{
 		"code": "es",
@@ -13,6 +14,7 @@
 		"loading": "Cargando...",
 		"language": "Lenguage: ",
 		"newTablePrompt": "Introduzca el nombre de la tabla:",
-		"error": "Se produjo un error: "
+		"error": "Se produjo un error: ",
+		"emptyTable": "Esta tabla no tiene filas"
 	}
 }
