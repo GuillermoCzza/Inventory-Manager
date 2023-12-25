@@ -4,56 +4,7 @@ import React from 'react';
 
 import config from './clientConfig.json';
 import language from './language.json';
-
-
-
-function Tabla(tabla) {
-
-
-	const columnOrder = []; //necessary to write values of rows in same order
-	const filas = []; //this will contain the JSX of all the rows
-
-	//create table headers and record column order for the fields
-	const headersJSX = []
-	tabla.fields.forEach(field => {
-		const fieldName = field.name.toUpperCase();
-		headersJSX.push(<div key={`${tabla.tableName}-${field.name}-header`} className='table-cell'><p>{fieldName}</p></div>)
-		columnOrder.push(field.name);
-	});
-	filas.push(<div key={`${tabla.tableName}-headers-row`} className='table-row table-headers'>{headersJSX}</div>);
-
-	//create each row
-	tabla.rows.forEach(row => {
-		const rowJSX = [];
-		const rowCellValues = Array(columnOrder.length);
-		for (const field in row) {
-			//put the field in the corresponding place in the row
-			rowCellValues[columnOrder.indexOf(field)] = row[field];
-		}
-
-		//actually write the JSX for the row with the ordered values
-		rowCellValues.forEach((value, index) => {
-			rowJSX.push(<div className='table-cell'>
-				<input name={rowCellValues[index]} defaultValue={value} type='text' />
-			</div>);
-		});
-
-		//add the JSX of each row to 'filas'
-		filas.push(<form key={`${tabla.tableName}-${row['producto_id']}`} action={`${config.SERVER_ADDRESS}/tables/${tabla.tableName}`} className='table-row' method="PUT">
-			{rowJSX}
-		</form>
-		);
-	});
-
-	return (
-		<div className='table'>
-			{filas}
-		</div>
-	);
-}
-
-
-
+import Tabla from './Tabla.js';
 
 
 function App() {
@@ -118,13 +69,15 @@ function App() {
 		tablas.forEach(row => {
 			const tableName = row.table_name;
 			lista.push(
-				<button table={tableName} onClick={loadTable} className="link-tabla">
+				<button key={`${tableName}-table-button`} onClick={loadTable} className="link-tabla">
 					{tableName}
 				</button>
 			);
 		});
 
-		return <div id="lista-tablas">{lista.concat(<NewTableButton />)}</div>;
+		return <div id="lista-tablas">
+			{lista.concat(<NewTableButton />)}
+		</div>;
 	}
 
 	//button to create a new table
@@ -148,7 +101,7 @@ function App() {
 				.catch(err => { alert(lang.error + err) });
 		};
 
-		return <button id="new-table-button" onClick={createTable}>+</button>;
+		return <button key="newTable-button" id="new-table-button" onClick={createTable}>+</button>;
 	}
 
 	//language change select element
