@@ -1,7 +1,7 @@
 import config from './clientConfig.json';
 
 
-export default function Tabla(tabla, lang) {
+export default function Tabla(tabla, lang, setTable) {
 	const columnOrder = []; //necessary to write values of rows in same order
 
 
@@ -32,7 +32,7 @@ export default function Tabla(tabla, lang) {
 		});
 
 		//add the JSX of each row to 'filas'
-		filas.push(<form onSubmit={(e) => { handleSubmit(e, tabla.tableName) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
+		filas.push(<form onSubmit={(e) => { handleSubmit(e, tabla.tableName, setTable) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
 			{rowJSX}
 			<input type="submit" hidden /> {/*add hidden submit button to each row, for submission on enter*/}
 		</form>
@@ -52,26 +52,32 @@ export default function Tabla(tabla, lang) {
 
 }
 
-function handleSubmit(e, tableName) {
-	e.preventDefault();
+function handleSubmit(e, tableName, setTable) {
+	e.preventDefault(); //I need this for the page not to reload, and to format the form data like I want
 	const formData = new FormData(e.target);
 
-	
-
-	const requestBody = {};
-
-	for (var [key, value] of formData.entries()) {
-		console.log(key, value);
-		requestBody[key] = value;
-	} 
-
-
+	//Get all the key value pairs in an array for easy server support for any size of form
+	const keyValuePairs = [];
+	for (const [key, value] of formData.entries()) {
+		keyValuePairs.push({ key: key, value: value });
+	}
 
 	fetch(`${config.SERVER_ADDRESS}/tables/${tableName}`, {
 		method: "PUT",
-		body: JSON.stringify(requestBody),
+		body: JSON.stringify({ keyValuePairs: keyValuePairs }),
 		headers: {
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	})
+		.then(res => res.json())
+		.then(data => {
+			//if the response contains an error message, throw the error
+			if (data.error){
+				throw data.error;
+			}
+			setTable(data, tableName)
+		})
+		.catch(err => {
+			alert(err);
+		})
 };

@@ -101,25 +101,60 @@ module.exports = (app, pool) => {
 	app.put('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		try {
 			const tableName = req.params.tableName;
-			console.log(req.body);
-			//TODO: escribir implementacion general del UPDATE con los parametros que hayan llegado
-		} catch (err) {
-			console.log('error al PUT (modificar) una fila');
-			console.error(err);
-			res.json({ error: err.toString() });
-		}
+			const keyValuePairs = req.body.keyValuePairs; //is an array of {key, value} objects
 
-		//res.json(req.body);
-		/*
-		try {
-			await pool.query(`UPDATE ${tableName}(nombre, stock, precio, categoria) VALUES($1, $2, $3, $4)`, [nombre, stock, precio, categoria]);
+			
+			//find name of identifier
+			let identifier = null;
+			for (const pair of keyValuePairs){
+				if (pair.key == config.IDENTIFIER_COLUMN){
+					identifier = pair.value;
+					break;
+				}
+			}
+			if (identifier == null) {
+				res.json({error: "Identifier column not found."})
+				return;
+			}
+
+			//write the string for the query values
+			let queryAssignmentsString = "";
+			const valuesArray = [];
+
+			let valueIndexInArr = '0';
+			for(const pair of keyValuePairs){
+				//skip identifier column, for it cannot be reassigned
+				if (pair.key == config.IDENTIFIER_COLUMN) {
+					valueIndexInArr++;
+					continue;
+				} 
+
+				//write down each key and value in order
+				queryAssignmentsString += `${pair.key} = $${valueIndexInArr}`;
+
+				//if it's not the last one, add a comma to the set query string
+				if (valueIndexInArr != keyValuePairs.length - 1){
+					queryAssignmentsString += ", ";
+				}
+				valuesArray.push(pair.value);
+
+				valueIndexInArr++;
+			}
+			console.log(queryAssignmentsString);
+			console.log(valuesArray);
+
+			//perform the row updating
+			const query = `UPDATE ${tableName} SET ${queryAssignmentsString} WHERE ${config.IDENTIFIER_COLUMN}='${identifier}'`
+			await pool.query(query, valuesArray);
+
+			//send back the updated table
 			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
 			res.json(tabla);
 		} catch (err) {
-			console.log('error al POST una fila');
+			console.log('error al PUT (modificar) una fila');
 			console.error(err);
-			res.json({ error: err.toString() });
-		}*/
+			res.status("422").json({ error: err.toString() });
+		}
 	});
 
 	//TODO: delete row

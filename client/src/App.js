@@ -12,11 +12,19 @@ import LanguageSelector from './LanguageSelector.js';
 function App() {
 	const [lang, setLanguage] = React.useState(language.en);
 	const [tableList, setTableList] = React.useState(null);
-	const [currentTable, setCurrentTable] = React.useState(null);
+	const [currentTable, setCurrentTable] = React.useState(null); //dont use setCurrentTable!
+	//use this instead.
+	const setTable = (data, tableName) => {
+		if (data != null){ //when setting table to an object (not null)...
+			data.tableName = tableName; //add tablename to table object so it can be retrieved in Tabla()
+		}
+		setCurrentTable(data);
+	}
+
 	let [loadError, setLoadError] = React.useState(null);
 
 	React.useEffect(() => {
-		setCurrentTable(null);
+		setTable(null, null);
 		fetch(config.SERVER_ADDRESS + "/tables")
 			.then(res => {
 				return res.json();
@@ -39,7 +47,7 @@ function App() {
 
 			<div className='App-main'>
 				{
-					currentTable ? Tabla(currentTable, lang) : //si hay tabla elegida, mostrarla. Sino...
+					currentTable ? Tabla(currentTable, lang, setTable) : //si hay tabla elegida, mostrarla. Sino...
 						(tableList ? ListaDeTablas(tableList) : //si se consiguió la lista de tablas, mostrarla. Sino...
 							(!loadError ? <p>{lang.loading}</p> : loadError)) //si hubo un error al conseguir las listas, mostrarlo. Sino mostrar "loading..."
 				}
@@ -58,8 +66,7 @@ function App() {
 			fetch(`${config.SERVER_ADDRESS}/tables/${tableName}`)
 				.then(res => res.json())
 				.then(data => {
-					data.tableName = tableName; //add tablename to table object so it can be retrieved in Tabla()
-					setCurrentTable(data);
+					setTable(data, tableName)
 				})
 				.catch(err => {
 					alert(lang.error + err.toString());
