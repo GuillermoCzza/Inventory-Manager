@@ -10,11 +10,11 @@
 .App {
   text-align: center;
 
-  min-height: 100vh;
-
   width: 100%;
 
   margin: auto;
+
+  box-sizing:border-box
 
 }
 
@@ -46,8 +46,8 @@
 
   padding: 25px;
 
-  min-width: 50%;
   width: fit-content;
+  height: fit-content;
 
   border-width: 1px;
   border-style: solid;
@@ -77,8 +77,6 @@ button:hover {
   color: var(--hover-text-color);
   border-color: var(--hover-text-color);
 }
-
-
 
 .link-tabla {
   --height: 70px;
@@ -111,9 +109,14 @@ button:hover {
   border-style: solid;
 }
 
+.table-frame{
+  margin: auto;
+}
+
 .table {
   display: table;
-  margin: auto;
+  margin: 0;
+  width: 10%;
 }
 
 .table > p{
@@ -122,11 +125,11 @@ button:hover {
 
 .table-row {
   display: table-row;
+  width: fit-content;
 }
 
 .table-cell {
   display: table-cell;
-  width: 100px;
   height: fit-content;
   padding: 5px 10px;
   border: 1px solid var(--text-color);

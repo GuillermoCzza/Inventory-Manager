@@ -2,6 +2,9 @@ import config from './clientConfig.json';
 
 
 export default function Tabla(tabla, lang, setTable) {
+	//TODO: add sorting
+	//TODO: add search bar
+	
 	const columnOrder = []; //necessary to write values of rows in same order
 	const tableName = tabla.tableName;
 	const tableUrl = `${config.SERVER_ADDRESS}/tables/${tableName}`;
