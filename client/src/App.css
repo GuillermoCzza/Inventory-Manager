@@ -150,7 +150,12 @@ button:hover {
 .delete-row-button{
   margin: 5px;
   background-color: var(--background-color);
+
+  width: fit-content;
+
+  box-sizing: border-box;
   
+  padding: 0px 5px;
   border-width: 1px;
   border-radius: 30%;
 
