@@ -79,15 +79,11 @@ module.exports = (app, pool) => {
 	});
 
 
-	//TODO: add row
+	//Creates a new, empty row
 	app.post('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		const tableName = req.params.tableName;
-		const nombre = req.body.nombre;
-		const stock = req.body.stock;
-		const precio = req.body.precio;
-		const categoria = req.body.categoria;
 		try {
-			await pool.query(`INSERT INTO ${tableName}(nombre, stock, precio, categoria) VALUES($1, $2, $3, $4)`, [nombre, stock, precio, categoria]);
+			await pool.query(`INSERT INTO ${tableName} DEFAULT VALUES`);
 			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
 			res.json(tabla);
 		} catch (err) {

@@ -24,7 +24,6 @@ function App() {
 	let [loadError, setLoadError] = React.useState(null);
 
 	React.useEffect(() => {
-		setTable(null, null);
 		fetch(config.SERVER_ADDRESS + "/tables")
 			.then(res => {
 				return res.json();
@@ -41,7 +40,6 @@ function App() {
 		<div className="App">
 			<header className="App-header">
 				{LanguageSelector(lang, setLanguage)}
-				{/* <img src={logo} className="App-logo" alt="logo" /> */}
 				<h1>{lang.title}</h1>
 			</header>
 

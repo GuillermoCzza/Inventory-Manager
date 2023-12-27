@@ -1,7 +1,7 @@
 * {
   --background-color: #202020;
   --text-color: #D0D0D0;
-  --element-background-color: #505050;
+  --element-background-color: #404040;
   color: var(--text-color);
 
   background-color: var(--background-color);
@@ -63,18 +63,27 @@
   align-items: center;
 }
 
-#lista-tablas > button:hover {
+button {
+  color: var(--text-color);
+  background-color: var(--element-background-color);
+  border-color: var(--text-color);
+  border-radius: 4px;
+  
+}
+
+button:hover {
   --hover-text-color: cyan;
 
   color: var(--hover-text-color);
   border-color: var(--hover-text-color);
 }
 
+
+
 .link-tabla {
   --height: 70px;
 
   font-size: 16px;
-  color: var(--text-color);
   text-align: center;
   vertical-align: middle;
 
@@ -82,12 +91,8 @@
   width: 200px;
   height: var(--height);
 
-  background-color: var(--element-background-color);
-
   border-width: 4px;
   border-style: solid;
-  border-color: var(--text-color);
-  border-radius: 2.5px;
 }
 
 #new-table-button {
@@ -96,16 +101,14 @@
   margin-left: var(--item-margin);
   width: var(--side-length);
   height: var(--side-length);
-  border-radius: 50%;
+  
 
   font-size: 35px;
 
-  color: inherit;
+  border-radius: 50%;
 
-  background-color: var(--element-background-color);
   border-width: 3px;
   border-style: solid;
-  border-color: var(--text-color);
 }
 
 .table {
@@ -141,27 +144,20 @@
   outline: none;
 }
 
-/* .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.delete-row-button{
+  margin: 5px;
+  background-color: var(--background-color);
+  
+  border-width: 1px;
+  border-radius: 30%;
+
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-} */
+.new-row-button {
+  font-size: 20px;
+  margin-top: 15px;
 
-/* 
-.App-link {
-  color: #61dafb;
+  width: fit-content;
+  height: fit-content;
+  padding: 5px 10px;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */

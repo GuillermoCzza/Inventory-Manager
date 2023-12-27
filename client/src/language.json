@@ -7,7 +7,8 @@
 		"newTablePrompt": "Please enter the table name:",
 		"error": "An error has occurred: ",
 		"emptyTable": "This table has no rows",
-		"delete": "Delete"
+		"delete": "Delete",
+		"newRow": "Create Row"
 	},
 	"es":{
 		"code": "es",
@@ -17,6 +18,7 @@
 		"newTablePrompt": "Introduzca el nombre de la tabla:",
 		"error": "Se produjo un error: ",
 		"emptyTable": "Esta tabla no tiene filas",
-		"delete": "Borrar"
+		"delete": "Borrar",
+		"newRow": "Crear Fila"
 	}
 }

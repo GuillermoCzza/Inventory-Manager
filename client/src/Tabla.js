@@ -36,7 +36,7 @@ export default function Tabla(tabla, lang, setTable) {
 		filas.push(<form onSubmit={(e) => { handleSubmit(e) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
 			{rowJSX}
 			<input type="submit" hidden /> {/*add hidden submit button to each row, for submission on enter*/}
-			<button onClick={() => { deleteRow(row) }} className='delete-row-button'>{lang.delete}</button>
+			{DeleteRowButton(row)}
 		</form>
 		);
 	});
@@ -47,15 +47,27 @@ export default function Tabla(tabla, lang, setTable) {
 				{tableHeader}
 				{tabla.rows.length !== 0 ? filas : null}
 			</div>
+			<NewRowButton/>
 			{tabla.rows.length === 0 ? <p>{lang.emptyTable}</p> : null}
 		</div>
 	);
 
 
-	//auxiliary functions below this point
+	//auxiliary functions and components below this point
+	function NewRowButton(){
+		return (
+			<button className='new-row-button' onClick={createRow}>{lang.newRow}</button>
+		);
+	}
+
+	function DeleteRowButton(row){
+		return (
+			<button type="button" onClick={() => { deleteRow(row) }} className='delete-row-button'>x</button>
+		);
+	}
 
 	//this function performs any request and automatically updates the table state
-	function doRequest(url, body) {
+	function doRequest(url, body, supressAlert = false) {
 		fetch(url, body)
 			.then(res => res.json())
 			.then(data => {
@@ -66,8 +78,19 @@ export default function Tabla(tabla, lang, setTable) {
 				setTable(data, tableName);
 			})
 			.catch(err => {
-				alert(err);
+				if (!supressAlert){
+					alert(err);
+				} else {
+					console.error(err);
+				}
 			})
+	}
+
+	function createRow(){
+		//Perform POST request
+		doRequest(tableUrl,{
+			method: "POST",
+		});
 	}
 
 	function deleteRow(row) {
@@ -78,7 +101,7 @@ export default function Tabla(tabla, lang, setTable) {
 			headers: {
 				"Content-type": "application/json; charset=UTF-8"
 			}
-		});
+		}, true);
 	}
 
 	function handleSubmit(e) {
