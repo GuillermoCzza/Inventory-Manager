@@ -103,7 +103,6 @@ module.exports = (app, pool) => {
 			const tableName = req.params.tableName;
 			const keyValuePairs = req.body.keyValuePairs; //is an array of {key, value} objects
 
-			
 			//find name of identifier
 			let identifier = null;
 			for (const pair of keyValuePairs){
@@ -140,8 +139,6 @@ module.exports = (app, pool) => {
 
 				valueIndexInArr++;
 			}
-			console.log(queryAssignmentsString);
-			console.log(valuesArray);
 
 			//perform the row updating
 			const query = `UPDATE ${tableName} SET ${queryAssignmentsString} WHERE ${config.IDENTIFIER_COLUMN}='${identifier}'`
@@ -153,9 +150,27 @@ module.exports = (app, pool) => {
 		} catch (err) {
 			console.log('error al PUT (modificar) una fila');
 			console.error(err);
-			res.status("422").json({ error: err.toString() });
+			res.json({ error: err.toString() });
 		}
 	});
 
 	//TODO: delete row
+	app.delete('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
+		try {
+			const tableName = req.params.tableName;
+			console.log(req.body.row);
+			const id = req.body.row[config.IDENTIFIER_COLUMN]; //row is the node-pg sql row object (json)
+			
+			//perform the row deletion
+			await pool.query(`DELETE FROM ${tableName} WHERE ${config.IDENTIFIER_COLUMN}=$1`, [id]);
+
+			//send back the updated table
+			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
+			res.json(tabla);
+		} catch (err) {
+			console.log('error al DELETE una fila');
+			console.error(err);
+			res.json({ error: err.toString() });
+		}
+	})
 };

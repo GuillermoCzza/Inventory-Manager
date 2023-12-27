@@ -3,7 +3,8 @@ import config from './clientConfig.json';
 
 export default function Tabla(tabla, lang, setTable) {
 	const columnOrder = []; //necessary to write values of rows in same order
-
+	const tableName = tabla.tableName;
+	const tableUrl = `${config.SERVER_ADDRESS}/tables/${tableName}`;
 
 	//create table headers and record column order for the fields
 	const headersJSX = []
@@ -32,9 +33,10 @@ export default function Tabla(tabla, lang, setTable) {
 		});
 
 		//add the JSX of each row to 'filas'
-		filas.push(<form onSubmit={(e) => { handleSubmit(e, tabla.tableName, setTable) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
+		filas.push(<form onSubmit={(e) => { handleSubmit(e) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
 			{rowJSX}
 			<input type="submit" hidden /> {/*add hidden submit button to each row, for submission on enter*/}
+			<button onClick={() => { deleteRow(row) }} className='delete-row-button'>{lang.delete}</button>
 		</form>
 		);
 	});
@@ -50,34 +52,53 @@ export default function Tabla(tabla, lang, setTable) {
 	);
 
 
-}
+	//auxiliary functions below this point
 
-function handleSubmit(e, tableName, setTable) {
-	e.preventDefault(); //I need this for the page not to reload, and to format the form data like I want
-	const formData = new FormData(e.target);
-
-	//Get all the key value pairs in an array for easy server support for any size of form
-	const keyValuePairs = [];
-	for (const [key, value] of formData.entries()) {
-		keyValuePairs.push({ key: key, value: value });
+	//this function performs any request and automatically updates the table state
+	function doRequest(url, body) {
+		fetch(url, body)
+			.then(res => res.json())
+			.then(data => {
+				//if the response contains an error message, throw the error
+				if (data.error) {
+					throw data.error;
+				}
+				setTable(data, tableName);
+			})
+			.catch(err => {
+				alert(err);
+			})
 	}
 
-	fetch(`${config.SERVER_ADDRESS}/tables/${tableName}`, {
-		method: "PUT",
-		body: JSON.stringify({ keyValuePairs: keyValuePairs }),
-		headers: {
-			"Content-type": "application/json; charset=UTF-8"
-		}
-	})
-		.then(res => res.json())
-		.then(data => {
-			//if the response contains an error message, throw the error
-			if (data.error){
-				throw data.error;
+	function deleteRow(row) {
+		//perform DELETE request
+		doRequest(tableUrl, {
+			method: "DELETE",
+			body: JSON.stringify({ row: row }),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
 			}
-			setTable(data, tableName)
-		})
-		.catch(err => {
-			alert(err);
-		})
-};
+		});
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault(); //I need this for the page not to reload, and to format the form data like I want
+		const formData = new FormData(e.target);
+
+		//Get all the key value pairs in an array for easy server support for any size of form
+		const keyValuePairs = [];
+		for (const [key, value] of formData.entries()) {
+			keyValuePairs.push({ key: key, value: value });
+		}
+
+		//perform PUT request
+		doRequest(tableUrl, {
+			method: "PUT",
+			body: JSON.stringify({ keyValuePairs: keyValuePairs }),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			}
+		});
+	}
+
+}

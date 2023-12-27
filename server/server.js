@@ -25,10 +25,9 @@ app.use(express.urlencoded({ extended: false }));
 // Serving static files from the 'public' directory
 app.use(express.static('public'));
 
-//This middleware allows for CORS between client and server,
-//which could be hosted at different addresses
+//This middleware allows for CORS between the server and (any) client
 app.use(cors({
-	origin: config.CLIENT_HOST
+	origin: '*'
 }));
 
 // Serve HTML of webpage and redirect to /tables
