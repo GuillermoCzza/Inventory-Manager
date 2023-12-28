@@ -8,7 +8,8 @@
 		"error": "An error has occurred: ",
 		"emptyTable": "This table has no rows",
 		"delete": "Delete",
-		"newRow": "Create Row"
+		"newRow": "Create Row",
+		"search": "Search: "
 	},
 	"es":{
 		"code": "es",
@@ -19,6 +20,7 @@
 		"error": "Se produjo un error: ",
 		"emptyTable": "Esta tabla no tiene filas",
 		"delete": "Borrar",
-		"newRow": "Crear Fila"
+		"newRow": "Crear Fila",
+		"search": "Buscar: "
 	}
 }
