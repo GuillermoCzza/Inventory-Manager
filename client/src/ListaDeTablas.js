@@ -14,6 +14,14 @@ export default function ListaDeTablas(props) {
 			.then(res => res.json())
 			.then(data => {
 				setTable(data, tableName)
+
+				//the first time it renders, push the home page into history stack so you can go back with the broser button,
+				//And set currentTable to null when going back so the table list is actually shown
+				window.history.pushState({}, "Table List", "/")
+				window.addEventListener('popstate', (_e) => {
+					setTable(null);
+
+				});
 			})
 			.catch(err => {
 				alert(lang.error + err.toString());
