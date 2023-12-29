@@ -28,7 +28,7 @@ function App() {
 	const [searchField, setSearchField] = React.useState("");
 
 
-	let [loadError, setLoadError] = React.useState(null);
+	const [loadError, setLoadError] = React.useState(null);
 
 	React.useEffect(() => {
 		fetch(config.SERVER_ADDRESS + "/tables")
