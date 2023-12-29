@@ -1,7 +1,6 @@
 import React from 'react';
 import config from './clientConfig.json';
 
-
 export default function TableApp(props) {
 	//the first time it renders, push the home page into history stack so you can go back with the broser button,
 	//And set currentTable to null when going back so the table list is actually shown

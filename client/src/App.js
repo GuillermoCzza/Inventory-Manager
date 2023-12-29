@@ -5,7 +5,7 @@ import React from 'react';
 import config from './clientConfig.json';
 import language from './language.json';
 
-import Tabla from './TablaApp.js';
+import TablaApp from './TablaModule.js';
 import LanguageSelector from './LanguageSelector.js';
 import ListaDeTablas from './ListaDeTablas.js';
 
@@ -52,7 +52,7 @@ function App() {
 
 			<div className='App-main'>
 				{
-					currentTable ? <Tabla currentTable={currentTable}
+					currentTable ? <TablaApp currentTable={currentTable}
 						lang={lang} setTable={setTable} searchField={searchField} setSearchField={setSearchField}
 						searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> : //si hay tabla elegida, mostrarla. Sino...
 						(tableList ? <ListaDeTablas tableList={tableList}
