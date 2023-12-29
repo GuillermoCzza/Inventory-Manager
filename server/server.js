@@ -30,11 +30,6 @@ app.use(cors({
 	origin: '*'
 }));
 
-// Serve HTML of webpage and redirect to /tables
-app.get('/', (req, res) => res.sendFile(process.cwd() + '/views/index.html'));
-
-//TODO: (for the first time) if they don't exist, create database and template table
-
 (async () => {
 	try {
 		await pool.connect();
@@ -42,7 +37,7 @@ app.get('/', (req, res) => res.sendFile(process.cwd() + '/views/index.html'));
 			pool.end();
 		});
 
-		const SQLExampleResponse = await pool.query('SELECT $1::text as message', ['hello world!']);
+		const SQLExampleResponse = await pool.query('SELECT $1::text as message', ['Connected to Database!']);
 		console.log(SQLExampleResponse.rows[0].message);
 
 		routes(app, pool); //set up routes
