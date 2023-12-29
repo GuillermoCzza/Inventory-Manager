@@ -23,6 +23,10 @@ function App() {
 		setCurrentTable(data);
 	}
 
+	//this is for searching the tables
+	const [searchTerm, setSearchTerm] = React.useState("")
+	const [searchField, setSearchField] = React.useState("");
+
 
 	let [loadError, setLoadError] = React.useState(null);
 
@@ -49,9 +53,10 @@ function App() {
 			<div className='App-main'>
 				{
 					currentTable ? <Tabla currentTable={currentTable}
-						lang={lang} setTable={setTable} /> : //si hay tabla elegida, mostrarla. Sino...
+						lang={lang} setTable={setTable} searchField={searchField} setSearchField={setSearchField}
+						searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> : //si hay tabla elegida, mostrarla. Sino...
 						(tableList ? <ListaDeTablas tableList={tableList}
-							lang={lang} setTable={setTable} setTableList={setTableList}/> : //si se consiguió la lista de tablas, mostrarla. Sino...
+							lang={lang} setTable={setTable} setTableList={setTableList} /> : //si se consiguió la lista de tablas, mostrarla. Sino...
 							(!loadError ? <p>{lang.loading}</p> : loadError)) //si hubo un error al conseguir las listas, mostrarlo. Sino mostrar "loading..."
 				}
 
