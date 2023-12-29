@@ -9,19 +9,20 @@ export default function TableApp(props) {
 	const tableName = tabla.tableName;
 	const tableUrl = `${config.SERVER_ADDRESS}/tables/${tableName}`;
 
+	//table component
 	const Tabla = React.forwardRef((props, ref) => {
 
 		React.useImperativeHandle(ref, () => {
 			return {
-			  setSearchField,
-			  setSearchTerm
+				setSearchField,
+				setSearchTerm
 			};
-		  }, []);
+		}, []);
 
 		//this is for searching the tables
 		const [searchTerm, setSearchTerm] = React.useState("")
 		const [searchField, setSearchField] = React.useState("");
-		
+
 		console.log("Term: " + searchTerm);
 		console.log("Column: " + searchField)
 
@@ -40,6 +41,16 @@ export default function TableApp(props) {
 		const filas = []; //this will contain the JSX of all the rows
 		//create each row (none will be added if there's 0)
 		for (const row of tabla.rows) {
+			//if the search settings aren't falsy (like ""),
+			//skip create row JSX (i.e. don't render it) if it doesn't match search
+			if (searchField && searchTerm &&
+				(row[searchField] === null || !row[searchField].toString().startsWith(searchTerm))) {
+				console.log("SearchField: " + searchField);
+				console.log("SearchTerm: " + searchTerm);
+				console.log(JSON.stringify(row));
+				continue;
+			}
+
 			const rowJSX = [];
 			const rowCellValues = Array(columnOrder.length);
 			for (const field in row) {
@@ -71,7 +82,8 @@ export default function TableApp(props) {
 		)
 	});
 
-	const tableRef = React.useRef(null)
+	//create ref to manipulate state of Tabla from SearchBar
+	const tableRef = React.useRef(null);
 
 	return (
 		<div className='table-frame'>
@@ -79,7 +91,7 @@ export default function TableApp(props) {
 				<ReturnButton />
 				<SearchBar />
 			</div>
-			<Tabla ref={tableRef}/>
+			<Tabla ref={tableRef} /> {/*asign_ref to Tabla*/}
 			{tabla.rows.length === 0 ? <p>{lang.emptyTable}</p> : null}
 			<NewRowButton />
 		</div>
@@ -99,7 +111,7 @@ export default function TableApp(props) {
 		return (
 			<div id="search-container">
 				<label key="search-bar-label" htmlFor="search-bar">{lang.search}</label>
-				<input key="search-bar" id='search-bar' onChange={changeSearchTerm} autoFocus></input>
+				<input key="search-bar" id='search-bar' onChange={changeSearchTerm}></input>
 				<select onChange={changeSearchField} id="search-column-select">
 					{optionsJSX}
 				</select>
@@ -108,16 +120,18 @@ export default function TableApp(props) {
 
 		function changeSearchTerm(e) {
 			const newSearchTerm = e.target.value;
+			//update state of Tabla
 			tableRef.current.setSearchTerm(newSearchTerm);
 		}
 
 		function changeSearchField(e) {
 			const selectedField = e.target.value;
+			//update state of Tabla
 			tableRef.current.setSearchField(selectedField);
 		}
 	}
 
-	
+
 
 	function ReturnButton() {
 		function handleClick() {
