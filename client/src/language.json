@@ -9,7 +9,8 @@
 		"emptyTable": "This table has no rows",
 		"delete": "Delete",
 		"newRow": "Create Row",
-		"search": "Search: "
+		"search": "Search: ",
+		"choose": "Choose"
 	},
 	"es":{
 		"code": "es",
@@ -21,6 +22,7 @@
 		"emptyTable": "Esta tabla no tiene filas",
 		"delete": "Borrar",
 		"newRow": "Crear Fila",
-		"search": "Buscar: "
+		"search": "Buscar: ",
+		"choose": "Elije"
 	}
 }

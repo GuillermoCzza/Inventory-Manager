@@ -9,59 +9,23 @@ export default function TableApp(props) {
 	const tableName = tabla.tableName;
 	const tableUrl = `${config.SERVER_ADDRESS}/tables/${tableName}`;
 
-	//this is for searching the tables
-	const [searchTerm, setSearchTerm] = React.useState("")
-	const [searchField, setSearchField] = React.useState("");
+	const Tabla = React.forwardRef((props, ref) => {
 
-	return (
-		<div className='table-frame'>
-			<div className='toolbar'>
-				<ReturnButton />
-				<SearchBar />
-			</div>
-			<Tabla />
-			{tabla.rows.length === 0 ? <p>{lang.emptyTable}</p> : null}
-			<NewRowButton />
-		</div>
-	);
+		React.useImperativeHandle(ref, () => {
+			return {
+			  setSearchField,
+			  setSearchTerm
+			};
+		  }, []);
 
-
-	//components and auxiliary functions below this point
-
-	//components
-
-	function SearchBar() {
-		//fill out options for the search column select with all the columns
-		const optionsJSX = [];
-		for (const field of tabla.fields) {
-			optionsJSX.push(<option key={`${field.name}-option`} value={field.name}>{field.name}</option>)
-		}
-
-		return (
-			<div id="search-container">
-				<label key="search-bar-label" htmlFor="search-bar">{lang.search}</label>
-				<input key="search-bar" value={searchTerm} id='search-bar' onChange={changeSearchTerm} autoFocus></input>
-				<select value={searchField} onChange={changeSearchField} id="search-column-select">
-					{optionsJSX}
-				</select>
-			</div>
-		)
-
-		function changeSearchTerm(e) {
-			const newSearchTerm = e.target.value;
-			setSearchTerm(newSearchTerm);
-		}
-
-		function changeSearchField(e) {
-			const selectedField = e.target.value;
-			setSearchField(selectedField);
-		}
-	}
-
-	function Tabla(props) {
+		//this is for searching the tables
+		const [searchTerm, setSearchTerm] = React.useState("")
+		const [searchField, setSearchField] = React.useState("");
+		
+		console.log("Term: " + searchTerm);
+		console.log("Column: " + searchField)
 
 		const columnOrder = []; //necessary to write values of rows in same order
-
 
 		//create table headers and record column order for the fields
 		const headersJSX = []
@@ -94,7 +58,7 @@ export default function TableApp(props) {
 			filas.push(<form onSubmit={(e) => { handleSubmit(e) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
 				{rowJSX}
 				<input type="submit" hidden /> {/*add hidden submit button to each row, for submission on enter*/}
-				{DeleteRowButton(row)}
+				<DeleteRowButton row={row} />
 			</form>
 			);
 		}
@@ -105,7 +69,55 @@ export default function TableApp(props) {
 				{tabla.rows.length !== 0 ? filas : null}
 			</div>
 		)
+	});
+
+	const tableRef = React.useRef(null)
+
+	return (
+		<div className='table-frame'>
+			<div className='toolbar'>
+				<ReturnButton />
+				<SearchBar />
+			</div>
+			<Tabla ref={tableRef}/>
+			{tabla.rows.length === 0 ? <p>{lang.emptyTable}</p> : null}
+			<NewRowButton />
+		</div>
+	);
+
+
+	//components and auxiliary functions below this point
+
+	function SearchBar() {
+
+		//fill out options for the search column select with all the columns
+		const optionsJSX = [<option key={`unselected-option`} value={""}>{`--${lang.choose}--`}</option>];
+		for (const field of tabla.fields) {
+			optionsJSX.push(<option key={`${field.name}-option`} value={field.name}>{field.name}</option>)
+		}
+
+		return (
+			<div id="search-container">
+				<label key="search-bar-label" htmlFor="search-bar">{lang.search}</label>
+				<input key="search-bar" id='search-bar' onChange={changeSearchTerm} autoFocus></input>
+				<select onChange={changeSearchField} id="search-column-select">
+					{optionsJSX}
+				</select>
+			</div>
+		)
+
+		function changeSearchTerm(e) {
+			const newSearchTerm = e.target.value;
+			tableRef.current.setSearchTerm(newSearchTerm);
+		}
+
+		function changeSearchField(e) {
+			const selectedField = e.target.value;
+			tableRef.current.setSearchField(selectedField);
+		}
 	}
+
+	
 
 	function ReturnButton() {
 		function handleClick() {
@@ -123,14 +135,12 @@ export default function TableApp(props) {
 		);
 	}
 
-	function DeleteRowButton(row) {
+	function DeleteRowButton(props) {
 		return (
-			<button type="button" onClick={() => { deleteRow(row) }} className='delete-row-button'>x</button>
+			<button type="button" onClick={() => { deleteRow(props.row) }} className='delete-row-button'>x</button>
 		);
 	}
 
-
-	//functions
 
 	//this function performs any request and automatically updates the table state
 	function doRequest(url, body, supressAlert = false) {
