@@ -12,6 +12,7 @@ export default function TableApp(props) {
 
 	return (
 		<div className='table-frame'>
+			<p>{lang.pressEnterNote}</p>
 			<div className='toolbar'>
 				<ReturnButton />
 				<SearchBar {...props} />

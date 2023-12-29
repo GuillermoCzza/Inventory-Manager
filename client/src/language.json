@@ -10,7 +10,8 @@
 		"delete": "Delete",
 		"newRow": "Create Row",
 		"search": "Search: ",
-		"choose": "Choose"
+		"choose": "Choose",
+		"pressEnterNote": "Note: you must press Enter on a cell from the modified row for changes to be saved."
 	},
 	"es":{
 		"code": "es",
@@ -23,6 +24,7 @@
 		"delete": "Borrar",
 		"newRow": "Crear Fila",
 		"search": "Buscar: ",
-		"choose": "Elije"
+		"choose": "Elije",
+		"pressEnterNote": "Notar: debes presionar Enter en una celda de la fila modificada para que se guarden los cambios."
 	}
 }

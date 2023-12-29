@@ -116,8 +116,9 @@ button:hover {
 .toolbar{
   display: flex;
   justify-content: space-around;
+  align-items: center;
 
-  margin-bottom: 10px;
+  margin: 10px 0px;
 }
 
 #return-button{
@@ -134,6 +135,7 @@ button:hover {
 
 #search-container{
   display: inline-block;
+  height: fit-content;
 }
 
 #search-bar{
