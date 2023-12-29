@@ -88,9 +88,6 @@ function SearchBar(props) {
 function Tabla(props) {
 	const { currentTable: tabla, tableName, setTable, searchTerm, searchField } = props;
 
-	console.log("Term: " + searchTerm);
-	console.log("Column: " + searchField)
-
 	const columnOrder = []; //necessary to write values of rows in same order
 
 	//create table headers and record column order for the fields
