@@ -1,5 +1,4 @@
 import React from 'react';
-import config from './clientConfig.json';
 
 export default function TableApp(props) {
 
@@ -44,7 +43,7 @@ export default function TableApp(props) {
 }
 
 function SearchBar(props) {
-	const { currentTable: tabla, lang, searchTerm, setSearchTerm, searchField, setSearchField } = props;
+	const { currentTable: tabla, lang, searchTerm, setSearchTerm, searchField, setSearchField, tableRequest } = props;
 
 	//fill out options for the search column select with all the columns
 	const optionsJSX = [<option key={`unselected-option`} value={""}>{`--${lang.choose}--`}</option>];
@@ -77,7 +76,7 @@ function SearchBar(props) {
 
 //table component
 function Tabla(props) {
-	const { currentTable: tabla, tableName, setTable, searchTerm, searchField } = props;
+	const { currentTable: tabla, tableName, setTable, searchTerm, searchField, tableRequest } = props;
 
 	const columnOrder = []; //necessary to write values of rows in same order
 
@@ -119,7 +118,7 @@ function Tabla(props) {
 		filas.push(<form onSubmit={(e) => { handleSubmit(e) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
 			{rowJSX}
 			<input type="submit" hidden /> {/*add hidden submit button to each row, for submission on enter*/}
-			<DeleteRowButton row={row} tableName={tableName} setTable={setTable}/>
+			<DeleteRowButton row={row} {...props}/>
 		</form>
 		);
 	}
@@ -142,7 +141,7 @@ function Tabla(props) {
 		}
 
 		//perform PUT request
-		doRequest(tableName, {
+		tableRequest(tableName, {
 			method: "PUT",
 			body: JSON.stringify({ keyValuePairs: keyValuePairs }),
 			headers: {
@@ -152,56 +151,36 @@ function Tabla(props) {
 	}
 }
 
-//this function performs any request and automatically updates the table state
-function doRequest(tableName, body, setTable, supressAlert = false) {
-	const url = `${config.SERVER_ADDRESS}/tables/${tableName}`;
-	fetch(url, body)
-		.then(res => res.json())
-		.then(data => {
-			//if the response contains an error message, throw the error
-			if (data.error) {
-				throw data.error;
-			}
-			setTable(data, tableName);
-		})
-		.catch(err => {
-			if (!supressAlert) {
-				alert(err);
-			} else {
-				console.error(err);
-			}
-		})
-}
 
 function NewRowButton(props) {
-	const { tableName, setTable, lang } = props;
+	const { tableName, setTable, lang, tableRequest } = props;
 	return (
-		<button className='new-row-button' onClick={() => createRow(tableName, setTable)}>{lang.newRow}</button>
+		<button className='new-row-button' onClick={() => createRow(tableName, setTable, tableRequest)}>{lang.newRow}</button>
 	);
 }
 
 function DeleteRowButton(props) {
-	const { row, tableName, setTable } = props;
+	const { row, tableName, setTable, tableRequest } = props;
 	return (
-		<button type="button" onClick={() => { deleteRow(row, tableName, setTable) }} className='delete-row-button'>x</button>
+		<button type="button" onClick={() => { deleteRow(row, tableName, setTable, tableRequest) }} className='delete-row-button'>x</button>
 	);
 }
 
 
-function createRow(tableName, setTable) {
+function createRow(tableName, setTable, tableRequest) {
 	//Perform POST request
-	doRequest(tableName, {
+	tableRequest(tableName, {
 		method: "POST",
 	}, setTable);
 }
 
-function deleteRow(row, tableName, setTable) {
+function deleteRow(row, tableName, setTable, tableRequest) {
 	//perform DELETE request
-	doRequest(tableName, {
+	tableRequest(tableName, {
 		method: "DELETE",
 		body: JSON.stringify({ row: row }),
 		headers: {
 			"Content-type": "application/json; charset=UTF-8"
 		}
-	}, setTable, true);
+	}, setTable, true, () => {console.log("eeeiiiiiaaaa")});
 }

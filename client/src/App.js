@@ -8,10 +8,11 @@ import language from './language.json';
 import TablaApp from './TablaModule.js';
 import LanguageSelector from './LanguageSelector.js';
 import ListaDeTablas from './ListaDeTablas.js';
-
+import tableRequestFunction from './util/tableRequestFunction.js';
 
 function App() {
 
+	const [loadError, setLoadError] = React.useState(null);
 	const [lang, setLanguage] = React.useState(language.en);
 	const [tableList, setTableList] = React.useState(null);
 	const [currentTable, setCurrentTable] = React.useState(null); //dont use setCurrentTable!
@@ -27,9 +28,16 @@ function App() {
 	const [searchTerm, setSearchTerm] = React.useState("")
 	const [searchField, setSearchField] = React.useState("");
 
+	//this is for sorting the tables
+	const [sortField, setSortField] = React.useState("");
+	const [sortAscending, setSortAscending] = React.useState(false);
 
-	const [loadError, setLoadError] = React.useState(null);
 
+	//create tableRequest function for current sorting settings
+	let tableRequest;
+	tableRequest = tableRequestFunction(sortField, sortAscending);
+
+	//request table list
 	React.useEffect(() => {
 		fetch(config.SERVER_ADDRESS + "/tables")
 			.then(res => {
@@ -43,6 +51,20 @@ function App() {
 			});
 	}, [lang.error]);
 
+		//these are the props that will be passed to the TablaApp component
+		const passedTableProps = {
+			currentTable,
+			lang,
+			setTable,
+			searchField,
+			setSearchField,
+			searchTerm,
+			setSearchTerm,
+			setSortField,
+			setSortAscending,
+			tableRequest
+		};
+
 	return (
 		<div className="App">
 			<header className="App-header">
@@ -52,10 +74,8 @@ function App() {
 
 			<div className='App-main'>
 				{
-					currentTable ? <TablaApp currentTable={currentTable}
-						lang={lang} setTable={setTable} searchField={searchField} setSearchField={setSearchField}
-						searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> : //si hay tabla elegida, mostrarla. Sino...
-						(tableList ? <ListaDeTablas tableList={tableList}
+					currentTable ? <TablaApp  {...passedTableProps} /> : //si hay tabla elegida, mostrarla. Sino...
+						(tableList ? <ListaDeTablas tableList={tableList} tableRequest={tableRequest}
 							lang={lang} setTable={setTable} setTableList={setTableList} /> : //si se consiguió la lista de tablas, mostrarla. Sino...
 							(!loadError ? <p>{lang.loading}</p> : loadError)) //si hubo un error al conseguir las listas, mostrarlo. Sino mostrar "loading..."
 				}

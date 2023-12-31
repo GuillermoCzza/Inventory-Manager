@@ -3,30 +3,21 @@ import config from './clientConfig.json';
 
 
 export default function ListaDeTablas(props) {
-	const { tableList, lang, setTable, setTableList } = props;
+	const { tableList, lang, setTable, setTableList, tableRequest } = props;
 
 	//each of the table buttons will call this on click
 	const loadTable = (event) => {
 		//get the table name from the button's table property, which is the table name in the db
 		const tableName = event.target.getAttribute('tabla');
 		//make a request and load the table
-		fetch(`${config.SERVER_ADDRESS}/tables/${tableName}`)
-			.then(res => res.json())
-			.then(data => {
-				setTable(data, tableName)
-
-				//the first time it renders, push the home page into history stack so you can go back with the broser button,
-				//And set currentTable to null when going back so the table list is actually shown
-				window.history.pushState({}, "Table List", "/")
+		tableRequest(tableName, { method: 'GET' }, setTable, false,
+		() => {
+			window.history.pushState({}, "Table List", "/")
 				window.addEventListener('popstate', (_e) => {
 					setTable(null);
 
 				});
-			})
-			.catch(err => {
-				alert(lang.error + err.toString());
-			});
-
+		});
 	}
 
 	//create the list of buttons to go to each table
