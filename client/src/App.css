@@ -153,6 +153,10 @@ button:focus {
   margin: auto;
 }
 
+.table-headers p {
+  user-select: none;
+}
+
 .table > p{
   display: inline-block;
 }
