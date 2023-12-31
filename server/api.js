@@ -70,7 +70,6 @@ module.exports = (app, pool) => {
 		const tableName = req.params.tableName;
 		try {
 			const tabla = await getTable(tableName, req.query);
-			console.log(tabla.rows);
 			res.json(tabla);
 		} catch (err) {
 			console.log('error al GET una tabla');
@@ -171,7 +170,6 @@ module.exports = (app, pool) => {
 	})
 
 	async function getTable(tableName, query) {
-		console.log("query: " + JSON.stringify(query));
 		const ascending = query.sortAscending;
 		const sortField = query.sortField;
 		let sqlQuery = `SELECT * FROM ${tableName}`
@@ -187,8 +185,6 @@ module.exports = (app, pool) => {
 		} else {
 			sqlQuery += ' DESC';
 		}
-
-		console.log(sqlQuery);
 
 		return (await pool.query(sqlQuery));
 	}
