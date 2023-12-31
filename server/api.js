@@ -69,7 +69,8 @@ module.exports = (app, pool) => {
 	app.get('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		const tableName = req.params.tableName;
 		try {
-			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
+			const tabla = await getTable(tableName, req.query);
+			console.log(tabla.rows);
 			res.json(tabla);
 		} catch (err) {
 			console.log('error al GET una tabla');
@@ -84,7 +85,7 @@ module.exports = (app, pool) => {
 		const tableName = req.params.tableName;
 		try {
 			await pool.query(`INSERT INTO ${tableName} DEFAULT VALUES`);
-			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
+			const tabla = await getTable(tableName, req.query);
 			res.json(tabla);
 		} catch (err) {
 			console.log('error al POST una fila');
@@ -101,14 +102,14 @@ module.exports = (app, pool) => {
 
 			//find name of identifier
 			let identifier = null;
-			for (const pair of keyValuePairs){
-				if (pair.key == config.IDENTIFIER_COLUMN){
+			for (const pair of keyValuePairs) {
+				if (pair.key == config.IDENTIFIER_COLUMN) {
 					identifier = pair.value;
 					break;
 				}
 			}
 			if (identifier == null) {
-				res.json({error: "Identifier column not found."})
+				res.json({ error: "Identifier column not found." })
 				return;
 			}
 
@@ -117,18 +118,18 @@ module.exports = (app, pool) => {
 			const valuesArray = [];
 
 			let valueIndexInArr = '0';
-			for(const pair of keyValuePairs){
+			for (const pair of keyValuePairs) {
 				//skip identifier column, for it cannot be reassigned
 				if (pair.key == config.IDENTIFIER_COLUMN) {
 					valueIndexInArr++;
 					continue;
-				} 
+				}
 
 				//write down each key and value in order
 				queryAssignmentsString += `${pair.key} = $${valueIndexInArr}`;
 
 				//if it's not the last one, add a comma to the set query string
-				if (valueIndexInArr != keyValuePairs.length - 1){
+				if (valueIndexInArr != keyValuePairs.length - 1) {
 					queryAssignmentsString += ", ";
 				}
 				valuesArray.push(pair.value);
@@ -141,7 +142,7 @@ module.exports = (app, pool) => {
 			await pool.query(query, valuesArray);
 
 			//send back the updated table
-			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
+			const tabla = await getTable(tableName, req.query);
 			res.json(tabla);
 		} catch (err) {
 			console.log('error al PUT (modificar) una fila');
@@ -154,14 +155,13 @@ module.exports = (app, pool) => {
 	app.delete('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		try {
 			const tableName = req.params.tableName;
-			console.log(req.body.row);
 			const id = req.body.row[config.IDENTIFIER_COLUMN]; //row is the node-pg sql row object (json)
-			
+
 			//perform the row deletion
 			await pool.query(`DELETE FROM ${tableName} WHERE ${config.IDENTIFIER_COLUMN}=$1`, [id]);
 
 			//send back the updated table
-			const tabla = await pool.query(`SELECT * FROM ${tableName}`);
+			const tabla = await getTable(tableName, req.query);
 			res.json(tabla);
 		} catch (err) {
 			console.log('error al DELETE una fila');
@@ -169,4 +169,27 @@ module.exports = (app, pool) => {
 			res.json({ error: err.toString() });
 		}
 	})
+
+	async function getTable(tableName, query) {
+		console.log("query: " + JSON.stringify(query));
+		const ascending = query.sortAscending;
+		const sortField = query.sortField;
+		let sqlQuery = `SELECT * FROM ${tableName}`
+
+		if (sortField) { //if sortfield isn't falsy
+			sqlQuery += ` ORDER BY ${sortField}`;
+		} else {
+			sqlQuery += ` ORDER BY ${config.IDENTIFIER_COLUMN}`;
+		}
+
+		if (ascending) {
+			sqlQuery += ' ASC';
+		} else {
+			sqlQuery += ' DESC';
+		}
+
+		console.log(sqlQuery);
+
+		return (await pool.query(sqlQuery));
+	}
 };

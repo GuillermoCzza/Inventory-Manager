@@ -10,14 +10,19 @@ export default function ListaDeTablas(props) {
 		//get the table name from the button's table property, which is the table name in the db
 		const tableName = event.target.getAttribute('tabla');
 		//make a request and load the table
-		tableRequest(tableName, { method: 'GET' }, setTable, false,
-		() => {
-			window.history.pushState({}, "Table List", "/")
+		tableRequest(tableName,
+			{
+				method: 'GET', headers: {
+					"Content-type": "application/json; charset=UTF-8"
+				}
+			}, setTable, false,
+			() => {
+				window.history.pushState({}, "Table List", "/")
 				window.addEventListener('popstate', (_e) => {
 					setTable(null);
 
 				});
-		});
+			});
 	}
 
 	//create the list of buttons to go to each table
