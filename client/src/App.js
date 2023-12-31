@@ -33,6 +33,7 @@ function App() {
 
 	//create tableRequest function for current sorting settings
 	const tableRequest = tableRequestFunction(setTable, sortField, sortAscending);
+	
 	//reload table with current sorting if sorting state has changed
 	React.useEffect(() => {
 		if(currentTable){ //if currentTable isn't null

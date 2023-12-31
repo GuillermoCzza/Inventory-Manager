@@ -185,8 +185,7 @@ module.exports = (app, pool) => {
 		} else {
 			sqlQuery += ' DESC';
 		}
-		console.log(ascending);
-		console.log(sqlQuery);
+
 		return (await pool.query(sqlQuery));
 	}
 };
