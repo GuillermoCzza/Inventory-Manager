@@ -180,12 +180,13 @@ module.exports = (app, pool) => {
 			sqlQuery += ` ORDER BY ${config.IDENTIFIER_COLUMN}`;
 		}
 
-		if (ascending) {
+		if (ascending === 'true') {
 			sqlQuery += ' ASC';
 		} else {
 			sqlQuery += ' DESC';
 		}
-
+		console.log(ascending);
+		console.log(sqlQuery);
 		return (await pool.query(sqlQuery));
 	}
 };

@@ -1,7 +1,9 @@
 import config from '../clientConfig.json'
-export default function tableRequestFunction(sortField, sortAscending) {
+export default function tableRequestFunction(setTable, sortField, sortAscending) {
 	//this function performs any request and automatically updates the table state
-	return function (tableName, request, setTable, supressAlert = false, successCallback = () => { }) {
+	return function (tableName, request, supressAlert = false, successCallback = () => { }) {
+		console.log(sortField);
+		console.log(sortAscending);
 		const query = new URLSearchParams({ sortField, sortAscending });
 		const url = `${config.SERVER_ADDRESS}/tables/${tableName}?${query}`;
 		fetch(url, request)
@@ -11,6 +13,9 @@ export default function tableRequestFunction(sortField, sortAscending) {
 				if (data.error) {
 					throw data.error;
 				}
+
+				console.log(JSON.stringify(data));
+
 				setTable(data, tableName);
 				successCallback();
 			})

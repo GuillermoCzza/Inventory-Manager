@@ -11,7 +11,6 @@ import ListaDeTablas from './ListaDeTablas.js';
 import tableRequestFunction from './util/tableRequestFunction.js';
 
 function App() {
-
 	const [loadError, setLoadError] = React.useState(null);
 	const [lang, setLanguage] = React.useState(language.en);
 	const [tableList, setTableList] = React.useState(null);
@@ -32,10 +31,14 @@ function App() {
 	const [sortField, setSortField] = React.useState("");
 	const [sortAscending, setSortAscending] = React.useState(false);
 
-
 	//create tableRequest function for current sorting settings
-	let tableRequest;
-	tableRequest = tableRequestFunction(sortField, sortAscending);
+	const tableRequest = tableRequestFunction(setTable, sortField, sortAscending);
+	//reload table with current sorting if sorting state has changed
+	React.useEffect(() => {
+		if(currentTable){ //if currentTable isn't null
+			tableRequest(currentTable.tableName);
+		}
+	}, [sortField, sortAscending])
 
 	//request table list
 	React.useEffect(() => {
@@ -60,7 +63,9 @@ function App() {
 			setSearchField,
 			searchTerm,
 			setSearchTerm,
+			sortField,
 			setSortField,
+			sortAscending,
 			setSortAscending,
 			tableRequest
 		};

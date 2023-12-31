@@ -15,7 +15,7 @@ export default function ListaDeTablas(props) {
 				method: 'GET', headers: {
 					"Content-type": "application/json; charset=UTF-8"
 				}
-			}, setTable, false,
+			}, false,
 			() => {
 				window.history.pushState({}, "Table List", "/")
 				window.addEventListener('popstate', (_e) => {

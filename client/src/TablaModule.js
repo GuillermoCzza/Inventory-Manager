@@ -6,7 +6,7 @@ export default function TableApp(props) {
 
 	const { currentTable: tabla, lang, setTable } = props;
 	const tableName = tabla.tableName;
-	
+
 
 
 	return (
@@ -16,9 +16,9 @@ export default function TableApp(props) {
 				<ReturnButton />
 				<SearchBar {...props} />
 			</div>
-			<Tabla {...props} tableName={tableName}/>
+			<Tabla {...props} tableName={tableName} />
 			{tabla.rows.length === 0 ? <p>{lang.emptyTable}</p> : null}
-			<NewRowButton {...props} tableName={tableName}/>
+			<NewRowButton {...props} tableName={tableName} />
 		</div>
 	);
 
@@ -37,13 +37,13 @@ export default function TableApp(props) {
 		)
 	}
 
-	
 
-	
+
+
 }
 
 function SearchBar(props) {
-	const { currentTable: tabla, lang, searchTerm, setSearchTerm, searchField, setSearchField, tableRequest } = props;
+	const { currentTable: tabla, lang, searchTerm, setSearchTerm, searchField, setSearchField } = props;
 
 	//fill out options for the search column select with all the columns
 	const optionsJSX = [<option key={`unselected-option`} value={""}>{`--${lang.choose}--`}</option>];
@@ -76,16 +76,31 @@ function SearchBar(props) {
 
 //table component
 function Tabla(props) {
-	const { currentTable: tabla, tableName, setTable, searchTerm, searchField, tableRequest } = props;
+	const { currentTable: tabla, tableName, searchTerm, searchField, tableRequest, sortAscending, setSortAscending, sortField, setSortField } = props;
 
 	const columnOrder = []; //necessary to write values of rows in same order
 
 	//create table headers and record column order for the fields
 	const headersJSX = []
 	for (const field of tabla.fields) {
-		const fieldName = field.name.toUpperCase();
-		headersJSX.push(<div key={`${tabla.tableName}-${field.name}-header`} className='table-cell'><p>{fieldName}</p></div>)
+		const fieldName = field.name;
+		const bigFieldName = fieldName.toUpperCase();
+		headersJSX.push(
+			<div onClick={handleClick} key={`${tabla.tableName}-${field.name}-header`} className='table-cell'>
+				<p>{`${bigFieldName} ${fieldName === sortField ?
+					(sortAscending ? "⮝" : "⮟") : ""}`}</p>
+			</div>
+		)
 		columnOrder.push(field.name);
+
+		//this controls sorting state changes
+		function handleClick() {
+			if (fieldName !== sortField) {
+				setSortField(fieldName);
+			} else {
+				setSortAscending(!sortAscending)
+			}
+		}
 	}
 
 	const tableHeader = <div key={`${tabla.tableName}-headers-row`} className='table-row table-headers'>{headersJSX}</div>;
@@ -118,7 +133,7 @@ function Tabla(props) {
 		filas.push(<form onSubmit={(e) => { handleSubmit(e) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
 			{rowJSX}
 			<input type="submit" hidden /> {/*add hidden submit button to each row, for submission on enter*/}
-			<DeleteRowButton row={row} {...props}/>
+			<DeleteRowButton row={row} {...props} />
 		</form>
 		);
 	}
@@ -147,34 +162,34 @@ function Tabla(props) {
 			headers: {
 				"Content-type": "application/json; charset=UTF-8"
 			}
-		}, setTable);
+		});
 	}
 }
 
 
 function NewRowButton(props) {
-	const { tableName, setTable, lang, tableRequest } = props;
+	const { tableName, lang, tableRequest } = props;
 	return (
-		<button className='new-row-button' onClick={() => createRow(tableName, setTable, tableRequest)}>{lang.newRow}</button>
+		<button className='new-row-button' onClick={() => createRow(tableName, tableRequest)}>{lang.newRow}</button>
 	);
 }
 
 function DeleteRowButton(props) {
-	const { row, tableName, setTable, tableRequest } = props;
+	const { row, tableName, tableRequest } = props;
 	return (
-		<button type="button" onClick={() => { deleteRow(row, tableName, setTable, tableRequest) }} className='delete-row-button'>x</button>
+		<button type="button" onClick={() => { deleteRow(row, tableName, tableRequest) }} className='delete-row-button'>x</button>
 	);
 }
 
 
-function createRow(tableName, setTable, tableRequest) {
+function createRow(tableName, tableRequest) {
 	//Perform POST request
 	tableRequest(tableName, {
 		method: "POST",
-	}, setTable);
+	});
 }
 
-function deleteRow(row, tableName, setTable, tableRequest) {
+function deleteRow(row, tableName, tableRequest) {
 	//perform DELETE request
 	tableRequest(tableName, {
 		method: "DELETE",
@@ -182,5 +197,5 @@ function deleteRow(row, tableName, setTable, tableRequest) {
 		headers: {
 			"Content-type": "application/json; charset=UTF-8"
 		}
-	}, setTable, true, () => {console.log("eeeiiiiiaaaa")});
+	}, true);
 }
