@@ -2,6 +2,7 @@
   --background-color: #202020;
   --text-color: #D0D0D0;
   --element-background-color: #404040;
+  --button-hover-text-color: cyan;
   color: var(--text-color);
 
   background-color: var(--background-color);
@@ -72,10 +73,14 @@ button {
 }
 
 button:hover {
-  --hover-text-color: cyan;
+  color: var(--button-hover-text-color);
+  border-color: var(--button-hover-text-color);
+}
 
-  color: var(--hover-text-color);
-  border-color: var(--hover-text-color);
+button:focus {
+  outline: none !important;
+  color: var(--button-hover-text-color);
+  border-color: var(--button-hover-text-color);
 }
 
 .link-tabla {
@@ -145,8 +150,7 @@ button:hover {
 
 .table {
   display: table;
-  margin: 0;
-  
+  margin: auto;
 }
 
 .table > p{
