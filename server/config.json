@@ -1,0 +1,13 @@
+{
+	"PORT": 15001,
+
+	"DATABASE_HOST": "localhost",
+	"DATABASE_PORT": 5432,
+	"DATABASE_NAME": "inventory_db",
+	"DATABASE_USER": "",
+	"DATABASE_PASS": "",
+	"QUERY_TIMEOUT": 10000,
+	"CONNECTION_TIMEOUT": 10000,
+	"TEMPLATE_TABLE_NAME": "template_table",
+	"IDENTIFIER_COLUMN": "producto_id"
+}
