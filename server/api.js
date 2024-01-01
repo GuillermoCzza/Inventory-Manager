@@ -7,8 +7,6 @@ const { tableNameToLowerCase, protectTemplate } = require('./middleware.js');
 * @param {import('pg').Pool} pool
 **/
 module.exports = (app, pool) => {
-
-
 	app.get('/test', (req, res) => {
 		console.log("recibido GET /test");
 		res.json({ test: true });
@@ -17,16 +15,7 @@ module.exports = (app, pool) => {
 	//get all tables in the database
 	app.get('/tables', async (req, res) => {
 		try {
-			const tablas = await pool.query("SELECT * FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
-			//remove template table from results
-			for (const index in tablas.rows) {
-				if (tablas.rows[index].table_name == config.TEMPLATE_TABLE_NAME) {
-					tablas.rows.splice(index, 1);
-					break;
-				}
-			}
-
-			res.json(tablas);
+			res.json(await getTableList())
 		} catch (err) {
 			res.json({ error: err });
 			console.error(err);
@@ -42,7 +31,8 @@ module.exports = (app, pool) => {
 			const escapedIdentifier = format.ident(tableName);
 			//tables are created from template table to have the same column types
 			await pool.query(`CREATE TABLE ${escapedIdentifier} (LIKE ${config.TEMPLATE_TABLE_NAME} INCLUDING ALL)`);
-			res.redirect(`/tables`);
+			
+			res.json(await getTableList())
 		} catch (err) {
 			console.log('error al POST una tabla');
 			console.error(err);
