@@ -37,7 +37,7 @@ module.exports = (app, pool) => {
 	//create a new table
 	app.post('/tables', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		try {
-			const tableString = req.body.tableName.trim().replace(/\s+/, '_');
+			const tableString = req.body.tableName.trim().replaceAll(/\s+/gi, '_');
 			const tableName = encodeURIComponent(tableString); //this is necessary because pg doesn't do safe identifier insertion (though it does do other query parameters safely)
 			const escapedIdentifier = format.ident(tableName);
 
@@ -176,15 +176,15 @@ module.exports = (app, pool) => {
 
 		if (sortField) { //if sortfield isn't falsy
 			sqlQuery += ` ORDER BY ${sortField}`;
-		} else {
-			sqlQuery += ` ORDER BY ${config.IDENTIFIER_COLUMN}`;
+
+			if (ascending === 'true') {
+				sqlQuery += ' ASC';
+			} else {
+				sqlQuery += ' DESC';
+			}
 		}
 
-		if (ascending === 'true') {
-			sqlQuery += ' ASC';
-		} else {
-			sqlQuery += ' DESC';
-		}
+		
 
 		return (await pool.query(sqlQuery));
 	}
