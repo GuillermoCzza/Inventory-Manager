@@ -44,6 +44,7 @@ app.use(cors({
 
 	} catch (err) {
 		console.error(err);
+		process.exit();
 	}
 })();
 

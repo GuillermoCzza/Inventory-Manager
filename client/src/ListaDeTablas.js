@@ -1,17 +1,21 @@
 import React from 'react';
 import config from './clientConfig.json';
+import tableListRequestFunction from './util/tableListRequestFunction';
 
 
 export default function ListaDeTablas(props) {
 	const { tableList, lang, setTable, setTableList, tableRequest, setSortField, setSearchTerm } = props;
+
+	//create tableListRequest function for current setTableList
+	const tableListRequest = tableListRequestFunction(setTableList);
+
 	//each of the table buttons will call this on click
-	const loadTable = (event) => {
+	const loadTable = (e) => {
 		//reset sortField and searchTerm
 		setSortField("");
 		setSearchTerm("");
-
 		//get the table name from the button's table property, which is the table name in the db
-		const tableName = event.target.getAttribute('tabla');
+		const tableName = e.target.getAttribute('tabla');
 		//make a request and load the table
 		tableRequest(tableName,
 			{
@@ -28,6 +32,21 @@ export default function ListaDeTablas(props) {
 			});
 	}
 
+	function borrarTabla(e) {
+		e.stopPropagation() //so it doesn't trigger the table loading of parent
+		const tableName = e.target.parentNode.getAttribute('tabla');
+
+		//perform request
+		tableListRequest({
+			method: 'DELETE',
+			body: JSON.stringify({ tableName: tableName }),
+
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			}
+		});
+	}
+
 	//create the list of buttons to go to each table
 	const lista = [];
 	tableList.forEach(row => {
@@ -35,6 +54,7 @@ export default function ListaDeTablas(props) {
 		lista.push(
 			<button tabla={tableName} key={tableName} onClick={loadTable} className="link-tabla">
 				{tableName}
+				<button className='borrar-tabla' onClick={borrarTabla}>x</button>
 			</button>
 		);
 	});
@@ -50,8 +70,9 @@ export default function ListaDeTablas(props) {
 			if (newTableName === null){ //if prompt was canceled
 				return;
 			}
-
-			await fetch(`${config.SERVER_ADDRESS}/tables`, {
+			
+			//perform request
+			await tableListRequest({
 				method: "POST",
 				redirect: 'follow',
 				body: JSON.stringify({
@@ -60,12 +81,7 @@ export default function ListaDeTablas(props) {
 				headers: {
 					"Content-type": "application/json; charset=UTF-8"
 				}
-			})
-				.then(res => res.json())
-				.then(data => {
-					setTableList(data.rows);
-				})
-				.catch(err => { alert(lang.error + err) });
+			});
 		};
 
 		return <button key="newTable-button" id="new-table-button" onClick={createTable}>+</button>;

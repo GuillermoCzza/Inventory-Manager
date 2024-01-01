@@ -38,9 +38,8 @@ module.exports = (app, pool) => {
 	app.post('/tables', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		try {
 			const tableString = req.body.tableName.trim().replaceAll(/\s+/gi, '_');
-			const tableName = encodeURIComponent(tableString); //this is necessary because pg doesn't do safe identifier insertion (though it does do other query parameters safely)
+			const tableName = encodeURIComponent(tableString).toLowerCase(); //this is necessary because pg doesn't do safe identifier insertion (though it does do other query parameters safely)
 			const escapedIdentifier = format.ident(tableName);
-
 			//tables are created from template table to have the same column types
 			await pool.query(`CREATE TABLE ${escapedIdentifier} (LIKE ${config.TEMPLATE_TABLE_NAME} INCLUDING ALL)`);
 			res.redirect(`/tables`);
@@ -56,8 +55,9 @@ module.exports = (app, pool) => {
 	app.delete('/tables', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		try {
 			const tableName = req.body.tableName;
-			await pool.query(`DROP TABLE ${tableName}`);
-			res.redirect('/tables');
+			await pool.query(`DROP TABLE "${tableName}"`);
+
+			res.json(await getTableList())
 		} catch (err) {
 			console.log('error al DELETE una tabla');
 			console.error(err);
@@ -184,8 +184,21 @@ module.exports = (app, pool) => {
 			}
 		}
 
-		
+
 
 		return (await pool.query(sqlQuery));
+	}
+
+	async function getTableList(){
+		const tablas = await pool.query("SELECT * FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
+			//remove template table from results
+			for (const index in tablas.rows) {
+				if (tablas.rows[index].table_name == config.TEMPLATE_TABLE_NAME) {
+					tablas.rows.splice(index, 1);
+					break;
+				}
+			}
+
+			return tablas;
 	}
 };

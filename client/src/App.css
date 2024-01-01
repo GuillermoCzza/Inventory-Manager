@@ -15,8 +15,7 @@
 
   margin: auto;
 
-  box-sizing:border-box
-
+  box-sizing: border-box
 }
 
 #language-selection {
@@ -69,7 +68,7 @@ button {
   background-color: var(--element-background-color);
   border-color: var(--text-color);
   border-radius: 4px;
-  
+
 }
 
 button:hover {
@@ -104,7 +103,7 @@ button:focus {
   color: var(--text-color);
 }
 
-.borrar-tabla{
+.borrar-tabla {
   margin-left: 1em;
 }
 
@@ -114,7 +113,7 @@ button:focus {
   margin-left: var(--item-margin);
   width: var(--side-length);
   height: var(--side-length);
-  
+
 
   font-size: 35px;
 
@@ -124,11 +123,11 @@ button:focus {
   border-style: solid;
 }
 
-.table-frame{
+.table-frame {
   margin: auto;
 }
 
-.toolbar{
+.toolbar {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -136,24 +135,24 @@ button:focus {
   margin: 10px 0px;
 }
 
-#return-button{
+#return-button {
   display: inline-block;
-  
+
   width: fit-content;
   height: fit-content;
 
   font-size: 16px;
-  font-weight:900;
+  font-weight: 900;
 
   padding: 5px 10px;
 }
 
-#search-container{
+#search-container {
   display: inline-block;
   height: fit-content;
 }
 
-#search-bar{
+#search-bar {
   border: 1px solid var(--text-color);
   margin: 0px 5px;
 }
@@ -167,7 +166,7 @@ button:focus {
   user-select: none;
 }
 
-.table > p{
+.table>p {
   display: inline-block;
 }
 
@@ -185,24 +184,24 @@ button:focus {
   vertical-align: middle;
 }
 
-.table-cell > input {
+.table-cell>input {
   border: 0;
   height: fit-content;
   text-wrap: wrap;
 }
 
-.table-cell > input:focus {
+.table-cell>input:focus {
   outline: none;
 }
 
-.delete-row-button{
+.delete-row-button {
   margin: 5px;
   background-color: var(--background-color);
 
   width: fit-content;
 
   box-sizing: border-box;
-  
+
   padding: 0px 5px;
   border-width: 1px;
   border-radius: 30%;
