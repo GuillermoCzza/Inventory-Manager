@@ -98,6 +98,16 @@ button:focus {
   border-style: solid;
 }
 
+/* When this element is hovered : and has a child node .borrar tabla : that is also hovered*/
+.link-tabla:hover:has(.borrar-tabla:hover) {
+  border-color: var(--text-color);
+  color: var(--text-color);
+}
+
+.borrar-tabla{
+  margin-left: 1em;
+}
+
 #new-table-button {
   --side-length: 50px;
 
