@@ -3,10 +3,13 @@ import config from './clientConfig.json';
 
 
 export default function ListaDeTablas(props) {
-	const { tableList, lang, setTable, setTableList, tableRequest } = props;
-
+	const { tableList, lang, setTable, setTableList, tableRequest, setSortField, setSearchTerm } = props;
 	//each of the table buttons will call this on click
 	const loadTable = (event) => {
+		//reset sortField and searchTerm
+		setSortField("");
+		setSearchTerm("");
+
 		//get the table name from the button's table property, which is the table name in the db
 		const tableName = event.target.getAttribute('tabla');
 		//make a request and load the table

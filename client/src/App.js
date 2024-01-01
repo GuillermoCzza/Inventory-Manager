@@ -33,7 +33,7 @@ function App() {
 
 	//create tableRequest function for current sorting settings
 	const tableRequest = tableRequestFunction(setTable, sortField, sortAscending);
-	
+
 	//reload table with current sorting if sorting state has changed
 	React.useEffect(() => {
 		if(currentTable){ //if currentTable isn't null
@@ -56,7 +56,7 @@ function App() {
 	}, [lang.error]);
 
 		//these are the props that will be passed to the TablaApp component
-		const passedTableProps = {
+		const passedProps = {
 			currentTable,
 			lang,
 			setTable,
@@ -80,9 +80,8 @@ function App() {
 
 			<div className='App-main'>
 				{
-					currentTable ? <TablaApp  {...passedTableProps} /> : //si hay tabla elegida, mostrarla. Sino...
-						(tableList ? <ListaDeTablas tableList={tableList} tableRequest={tableRequest}
-							lang={lang} setTable={setTable} setTableList={setTableList} /> : //si se consiguió la lista de tablas, mostrarla. Sino...
+					currentTable ? <TablaApp  {...passedProps} /> : //si hay tabla elegida, mostrarla. Sino...
+						(tableList ? <ListaDeTablas {...passedProps} tableList={tableList} /> : //si se consiguió la lista de tablas, mostrarla. Sino...
 							(!loadError ? <p>{lang.loading}</p> : loadError)) //si hubo un error al conseguir las listas, mostrarlo. Sino mostrar "loading..."
 				}
 
