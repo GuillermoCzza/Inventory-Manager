@@ -53,7 +53,7 @@ export default function ListaDeTablas(props) {
 		const tableName = row.table_name;
 		lista.push(
 			<button tabla={tableName} key={tableName} onClick={loadTable} className="link-tabla">
-				{tableName}
+				<p>{tableName}</p>
 				<button className='borrar-tabla' onClick={borrarTabla}>x</button>
 			</button>
 		);

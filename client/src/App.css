@@ -83,6 +83,12 @@ button:focus {
 }
 
 .link-tabla {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 20px;
+  
   --height: 70px;
 
   font-size: 16px;
@@ -90,11 +96,20 @@ button:focus {
   vertical-align: middle;
 
   margin: var(--item-margin);
-  width: 200px;
+  width: fit-content;
+  padding: 0px 20px;
   height: var(--height);
 
   border-width: 4px;
   border-style: solid;
+}
+
+.link-tabla > p {
+  width: fit-content;
+  display: inline-block;
+  color: inherit;
+
+  background-color: inherit;
 }
 
 /* When this element is hovered : and has a child node .borrar tabla : that is also hovered*/
@@ -104,8 +119,6 @@ button:focus {
 }
 
 .borrar-tabla {
-  margin-left: 1em;
-
   width: 1.2em;
   height: 1.2em;
 
