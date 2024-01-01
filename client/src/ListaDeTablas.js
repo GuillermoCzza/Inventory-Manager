@@ -47,6 +47,10 @@ export default function ListaDeTablas(props) {
 	function NewTableButton() {
 		const createTable = async () => {
 			const newTableName = prompt(lang.newTablePrompt)
+			if (newTableName === null){ //if prompt was canceled
+				return;
+			}
+
 			await fetch(`${config.SERVER_ADDRESS}/tables`, {
 				method: "POST",
 				redirect: 'follow',
