@@ -105,6 +105,16 @@ button:focus {
 
 .borrar-tabla {
   margin-left: 1em;
+
+  width: 1.2em;
+  height: 1.2em;
+
+  line-height: 0;
+
+  font-size: 1.5em;
+  font-weight: 800;
+
+  border-width: 2px;
 }
 
 #new-table-button {
