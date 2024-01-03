@@ -58,7 +58,7 @@ app.use(cors({
 			}
 		}
 
-		const SQLExampleResponse = await pool.query('SELECT $1::text as message', ['Connected to Database!']);
+		const SQLExampleResponse = await pool.query('SELECT $1::text as message', [`Connected to '${config.DATABASE_NAME}' database!`]);
 		console.log(SQLExampleResponse.rows[0].message);
 
 		routes(app, pool); //set up routes
