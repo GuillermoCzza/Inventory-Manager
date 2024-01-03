@@ -11,7 +11,7 @@
 		"newRow": "Create Row",
 		"search": "Search: ",
 		"choose": "Choose",
-		"pressEnterNote": "Note: you must press Enter on a cell from the modified row for changes to be saved."
+		"tableSortNote": "Note: Sorting by some column strongly adviced.\nClick on column to sort according to it, and click again to toggle ascending/descending."
 	},
 	"es":{
 		"code": "es",
@@ -25,6 +25,6 @@
 		"newRow": "Crear Fila",
 		"search": "Buscar: ",
 		"choose": "Elije",
-		"pressEnterNote": "Notar: debes presionar Enter en una celda de la fila modificada para que se guarden los cambios."
+		"tableSortNote": "Nota: Se aconseja fuertemente ordenar por alguna columna.\nHaz click en una columna para ordenar de acuerdo a ella, y haz click de nuevo para alternar ascendiente/descendiente."
 	}
 }

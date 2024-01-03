@@ -8,12 +8,11 @@ export default function TableApp(props) {
 	const tableName = tabla.tableName;
 
 
-
 	return (
 		<div className='table-frame'>
-			<p>{lang.pressEnterNote}</p>
+			<p className='note'>{lang.tableSortNote}</p>
 			<div className='toolbar'>
-				<ReturnButton />
+				<ReturnButton setTable={setTable} />
 				<SearchBar {...props} />
 			</div>
 			<Tabla {...props} tableName={tableName} />
@@ -21,25 +20,16 @@ export default function TableApp(props) {
 			<NewRowButton {...props} tableName={tableName} />
 		</div>
 	);
+}
 
-
-	//components and auxiliary functions below this point
-
-
-
-	function ReturnButton() {
-		function handleClick() {
-			setTable(null, null)
-		}
-
-		return (
-			<button id="return-button" onClick={handleClick}>{"<"}</button>
-		)
+function ReturnButton(props) {
+	function handleClick() {
+		props.setTable(null, null)
 	}
 
-
-
-
+	return (
+		<button id="return-button" onClick={handleClick}>{"<"}</button>
+	)
 }
 
 function SearchBar(props) {
@@ -130,10 +120,10 @@ function Tabla(props) {
 		});
 
 		//add the JSX of each row to 'filas'
-		filas.push(<form onSubmit={(e) => { handleSubmit(e) }} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
+		filas.push(<form onBlur={handleFormBlur} onSubmit={handleSubmit} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
 			{rowJSX}
+			<DeleteRowButton className="table-cell" row={row} {...props} />
 			<input type="submit" hidden /> {/*add hidden submit button to each row, for submission on enter*/}
-			<DeleteRowButton row={row} {...props} />
 		</form>
 		);
 	}
@@ -144,6 +134,27 @@ function Tabla(props) {
 			{tabla.rows.length !== 0 ? filas : null}
 		</div>
 	)
+
+	function handleFormBlur(e) {
+		const form = e.currentTarget; //get form node
+
+		//get submit input of form
+		let submitInput;
+		for (const child of form){
+			if (child.getAttribute('type') == 'submit') {
+				submitInput = child;
+				break;
+			}
+		}
+
+		//do nothing if destination focus is a descendant of form
+		if (form.contains(e.relatedTarget)) {
+			return;
+		}
+		//if it isn't...
+		submitInput.click();
+
+	}
 
 	function handleSubmit(e) {
 		e.preventDefault(); //I need this for the page not to reload, and to format the form data like I want
