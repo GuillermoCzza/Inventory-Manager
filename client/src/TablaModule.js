@@ -141,7 +141,7 @@ function Tabla(props) {
 		//get submit input of form
 		let submitInput;
 		for (const child of form){
-			if (child.getAttribute('type') == 'submit') {
+			if (child.getAttribute('type') === 'submit') {
 				submitInput = child;
 				break;
 			}
