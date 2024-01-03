@@ -8,6 +8,8 @@ const port = config.PORT || 3000;
 const routes = require("./api.js");
 
 const { Pool } = require('pg');
+const { createdb } = require("pgtools");
+
 const pool = new Pool({
 	user: config.DATABASE_USER,
 	password: config.DATABASE_PASS,
@@ -32,22 +34,37 @@ app.use(cors({
 
 (async () => {
 	try {
-		//TODO: create db if not exists (use pgtools for cleanliness)
+		//attempt to connect to database
+		try {
+			await pool.connect();
+		} catch (e) {
+			//if error code is 3D000 (i.e. database does not exist), create db, template_table and connect
+			if (e.code === '3D000') {
+				console.log(`Database '${config.DATABASE_NAME}' not found. Attempting to create it...`);
+				try {
+					const pgtoolsConfig = {
+						user: config.DATABASE_USER,
+						password: config.DATABASE_PASS
+					}
+					await createdb(pgtoolsConfig, config.DATABASE_NAME);
+					//TODO: create template_table
 
-		await pool.connect();
-		process.on('exit', () => {
-			pool.end();
-		});
+
+					await pool.connect();
+				} catch (e) {
+					console.error(e);
+					process.exit();
+				}
+			}
+		}
 
 		const SQLExampleResponse = await pool.query('SELECT $1::text as message', ['Connected to Database!']);
 		console.log(SQLExampleResponse.rows[0].message);
 
 		routes(app, pool); //set up routes
 
-	} catch (err) {
-		console.error(err);
-		process.exit();
+		app.listen(port, () => console.log(`App listening on port ${port}!`));
+	} catch (e) {
+		console.error(e);
 	}
 })();
-
-app.listen(port, () => console.log(`App listening on port ${port}!`));
