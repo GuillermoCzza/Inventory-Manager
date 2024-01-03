@@ -32,6 +32,8 @@ app.use(cors({
 
 (async () => {
 	try {
+		//TODO: create db if not exists (use pgtools for cleanliness)
+
 		await pool.connect();
 		process.on('exit', () => {
 			pool.end();
