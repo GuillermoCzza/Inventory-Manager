@@ -33,6 +33,8 @@ To use this application, you will have to fill out a config.json file in the ser
 
 To run the app run start.bat in the server folder.
 
+**Note**: renaming the primary key column of the template table, or any other table in the database is not adviced. If for whatever reason you must do so, you should rename the IDENTIFIER_COLUMN field at client/src/clientConfig.json to match the new name (, run npm build in the client folder if you're using the source code,) and restart the application.
+
 ## Running from files
 
 To get it to work from the files you will first have to run the console command 'npm run build' in the client folder.
