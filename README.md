@@ -10,7 +10,7 @@ To be added
 
 ## Usage
 
-To use this application, you will have to fill out a config.json file in the server folder like this (whitout the comments):
+To use this application, you will have to fill out a config.json file in the server folder like this (without the comments):
 
 ```json
 {
