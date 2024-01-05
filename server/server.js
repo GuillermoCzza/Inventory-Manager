@@ -9,6 +9,7 @@ const routes = require("./api.js");
 
 const { Pool } = require('pg');
 const { createdb } = require("pgtools");
+const format = require('pg-format');
 
 const pool = new Pool({
 	user: config.DATABASE_USER,
@@ -38,19 +39,25 @@ app.use(cors({
 		try {
 			await pool.connect();
 		} catch (e) {
-			//if error code is 3D000 (i.e. database does not exist), create db, template_table and connect
+			//if error code is 3D000 (i.e. database does not exist), create db, connect and create template_table
 			if (e.code === '3D000') {
 				console.log(`Database '${config.DATABASE_NAME}' not found. Attempting to create it...`);
 				try {
+					//create db
 					const pgtoolsConfig = {
 						user: config.DATABASE_USER,
 						password: config.DATABASE_PASS
 					}
 					await createdb(pgtoolsConfig, config.DATABASE_NAME);
-					//TODO: create template_table
 
-
+					//connect to db
 					await pool.connect();
+
+					//create template_table
+					const queryColumnsString = config.TEMPLATE_TABLE_DATA_COLUMNS
+						.map(column => `${format.ident(column)} TEXT`).join(", ");
+					const query = `CREATE TABLE ${config.TEMPLATE_TABLE_NAME} (${config.IDENTIFIER_COLUMN} SERIAL PRIMARY KEY, ${queryColumnsString})`;
+					await pool.query(query);
 				} catch (e) {
 					console.error(e);
 					process.exit();
