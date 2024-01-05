@@ -150,7 +150,7 @@ button:focus {
   margin: auto;
 }
 
-.note{
+.note {
   white-space: pre-wrap;
 }
 
@@ -203,7 +203,12 @@ button:focus {
 }
 
 .table-cell {
+  --width: 150px;
+
   display: table-cell;
+  width: var(--width);
+  min-width: var(--width);
+  max-width: var(--width);
   height: fit-content;
   padding: 5px 10px;
   border: 1px solid var(--text-color);
@@ -213,6 +218,13 @@ button:focus {
 
 .table-cell>input {
   border: 0;
+  padding: 0;
+  margin: 0;
+
+  width: 100%;
+
+  text-align: center;
+
   height: fit-content;
   text-wrap: wrap;
 }
@@ -221,10 +233,11 @@ button:focus {
   outline: none;
 }
 
-.delete-row-button {
-  margin: 5px;
-  background-color: var(--background-color);
+.invisible{
+  visibility: hidden;
+}
 
+.end-of-row-button {
   width: fit-content;
 
   box-sizing: border-box;
@@ -232,7 +245,11 @@ button:focus {
   padding: 0px 5px;
   border-width: 1px;
   border-radius: 30%;
+  margin: 5px;
+}
 
+.delete-row-button {
+  background-color: var(--background-color);
 }
 
 .new-row-button {

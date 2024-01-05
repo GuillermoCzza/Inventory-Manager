@@ -94,7 +94,10 @@ function Tabla(props) {
 		}
 	}
 
-	const tableHeader = <div key={`${tabla.tableName}-headers-row`} className='table-row table-headers'>{headersJSX}</div>;
+	const tableHeader = <div key={`${tabla.tableName}-headers-row`} className='table-row table-headers'>
+		{headersJSX}
+		<DummyButton />
+	</div>;
 
 	const filas = []; //this will contain the JSX of all the rows
 	//create each row (none will be added if there's 0)
@@ -141,7 +144,7 @@ function Tabla(props) {
 
 		//get submit input of form
 		let submitInput;
-		for (const child of form){
+		for (const child of form) {
 			if (child.getAttribute('type') === 'submit') {
 				submitInput = child;
 				break;
@@ -186,10 +189,16 @@ function NewRowButton(props) {
 	);
 }
 
+function DummyButton(){
+	return (
+		<button type="button" className='invisible end-of-row-button'>x</button>
+	);
+}
+
 function DeleteRowButton(props) {
 	const { row, tableName, tableRequest } = props;
 	return (
-		<button type="button" onClick={() => { deleteRow(row, tableName, tableRequest) }} className='delete-row-button'>x</button>
+		<button type="button" onClick={() => { deleteRow(row, tableName, tableRequest) }} className='delete-row-button end-of-row-button'>x</button>
 	);
 }
 
