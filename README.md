@@ -1,6 +1,7 @@
 # Inventory-Manager
 
 This is a PostgreSQL table manager made for the purposes of providing a simple interface for managing inventory, though you can use it for whatever table you want by modifying the template_table table in the database.
+
 Make sure you have PostgreSQL installed at whatever computer you want to host the database.
 
 ## Releases
@@ -9,7 +10,7 @@ To be added
 
 ## Usage
 
-To use this application, you will have to fill out a config.json file in the server folder like this:
+To use this application, you will have to fill out a config.json file in the server folder like this (whitout the comments):
 
 ```json
 {
