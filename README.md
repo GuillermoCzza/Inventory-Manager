@@ -2,7 +2,7 @@
 
 This is a PostgreSQL table manager made for the purposes of providing a simple interface for managing inventory, though you can use it for whatever table you want by modifying the template_table table in the database.
 
-Make sure you have PostgreSQL installed at whatever computer you want to host the database.
+You must have [Node.js](https://nodejs.org/en) installed to run this. Also, make sure you have [PostgreSQL](https://www.postgresql.org/) installed at whatever computer you want to host the database.
 
 ## Releases
 
