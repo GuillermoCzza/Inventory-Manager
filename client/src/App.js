@@ -2,7 +2,6 @@
 import './App.css';
 import React from 'react';
 
-import config from './clientConfig.json';
 import language from './language.json';
 
 import TablaApp from './TablaModule.js';
@@ -43,7 +42,7 @@ function App() {
 
 	//request table list
 	React.useEffect(() => {
-		fetch(config.SERVER_ADDRESS + "/tables")
+		fetch("/tables")
 			.then(res => {
 				return res.json();
 			})

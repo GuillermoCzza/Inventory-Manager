@@ -1,5 +1,6 @@
 const format = require('pg-format');
 const config = require("./config.json");
+const { IDENTIFIER_COLUMN } = require("../client/src/clientConfig.json")
 const { tableNameToLowerCase, protectTemplate } = require('./middleware.js');
 
 /**
@@ -7,11 +8,6 @@ const { tableNameToLowerCase, protectTemplate } = require('./middleware.js');
 * @param {import('pg').Pool} pool
 **/
 module.exports = (app, pool) => {
-	app.get('/test', (req, res) => {
-		console.log("recibido GET /test");
-		res.json({ test: true });
-	});
-
 	//get all tables in the database
 	app.get('/tables', async (req, res) => {
 		try {
@@ -95,7 +91,7 @@ module.exports = (app, pool) => {
 			//find name of identifier
 			let identifier = null;
 			for (const pair of keyValuePairs) {
-				if (pair.key == config.IDENTIFIER_COLUMN) {
+				if (pair.key == IDENTIFIER_COLUMN) {
 					identifier = pair.value;
 					break;
 				}
@@ -112,7 +108,7 @@ module.exports = (app, pool) => {
 			let valueIndexInArr = '0';
 			for (const pair of keyValuePairs) {
 				//skip identifier column, for it cannot be reassigned
-				if (pair.key == config.IDENTIFIER_COLUMN) {
+				if (pair.key == IDENTIFIER_COLUMN) {
 					valueIndexInArr++;
 					continue;
 				}
@@ -130,7 +126,7 @@ module.exports = (app, pool) => {
 			}
 
 			//perform the row updating
-			const query = `UPDATE ${tableName} SET ${queryAssignmentsString} WHERE ${config.IDENTIFIER_COLUMN}='${identifier}'`
+			const query = `UPDATE ${tableName} SET ${queryAssignmentsString} WHERE ${IDENTIFIER_COLUMN}='${identifier}'`
 			await pool.query(query, valuesArray);
 
 			//send back the updated table
@@ -147,10 +143,10 @@ module.exports = (app, pool) => {
 	app.delete('/tables/:tableName', tableNameToLowerCase, protectTemplate, async (req, res) => {
 		try {
 			const tableName = req.params.tableName;
-			const id = req.body.row[config.IDENTIFIER_COLUMN]; //row is the node-pg sql row object (json)
+			const id = req.body.row[IDENTIFIER_COLUMN]; //row is the node-pg sql row object (json)
 
 			//perform the row deletion
-			await pool.query(`DELETE FROM ${tableName} WHERE ${config.IDENTIFIER_COLUMN}=$1`, [id]);
+			await pool.query(`DELETE FROM ${tableName} WHERE ${IDENTIFIER_COLUMN}=$1`, [id]);
 
 			//send back the updated table
 			const tabla = await getTable(tableName, req.query);

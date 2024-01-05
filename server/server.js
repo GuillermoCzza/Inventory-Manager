@@ -1,8 +1,9 @@
+const path = require('path');
 const express = require('express');
 const app = express();
-const cors = require('cors');
 
 const config = require("./config.json");
+const { IDENTIFIER_COLUMN } = require("../client/src/clientConfig.json")
 const port = config.PORT || 3000;
 
 const routes = require("./api.js");
@@ -25,13 +26,12 @@ const pool = new Pool({
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Serving static files from the 'public' directory
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, '../client/build')));
 
-//This middleware allows for CORS between the server and (any) client
-app.use(cors({
-	origin: '*'
-}));
+//serve app
+app.get('/', function (req, res) {
+	res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
 
 (async () => {
 	try {
@@ -56,7 +56,7 @@ app.use(cors({
 					//create template_table
 					const queryColumnsString = config.TEMPLATE_TABLE_DATA_COLUMNS
 						.map(column => `${format.ident(column)} TEXT`).join(", ");
-					const query = `CREATE TABLE ${config.TEMPLATE_TABLE_NAME} (${config.IDENTIFIER_COLUMN} SERIAL PRIMARY KEY, ${queryColumnsString})`;
+					const query = `CREATE TABLE ${config.TEMPLATE_TABLE_NAME} (${IDENTIFIER_COLUMN} SERIAL PRIMARY KEY, ${queryColumnsString})`;
 					await pool.query(query);
 				} catch (e) {
 					console.error(e);

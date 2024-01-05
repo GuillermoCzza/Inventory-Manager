@@ -1,8 +1,7 @@
-import config from '../clientConfig.json'
 export default function tableListRequestFunction(setTableList) {
 	//this function performs any request and automatically updates the table state
 	return function (request, supressAlert = false) {
-		const url = `${config.SERVER_ADDRESS}/tables/`;
+		const url = '/tables/';
 		fetch(url, request)
 			.then(res => res.json())
 			.then(data => {
