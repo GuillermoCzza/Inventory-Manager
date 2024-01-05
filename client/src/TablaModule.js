@@ -1,4 +1,5 @@
 import React from 'react';
+import clientConfig from './clientConfig.json'
 
 export default function TableApp(props) {
 
@@ -120,7 +121,7 @@ function Tabla(props) {
 		});
 
 		//add the JSX of each row to 'filas'
-		filas.push(<form onBlur={handleFormBlur} onSubmit={handleSubmit} key={`${tabla.tableName}-${row['producto_id']}`} className='table-row'>
+		filas.push(<form onBlur={handleFormBlur} onSubmit={handleSubmit} key={`${tabla.tableName}-${row[clientConfig.IDENTIFIER_COLUMN]}`} className='table-row'>
 			{rowJSX}
 			<DeleteRowButton className="table-cell" row={row} {...props} />
 			<input type="submit" hidden /> {/*add hidden submit button to each row, for submission on enter*/}
