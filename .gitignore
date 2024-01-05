@@ -131,3 +131,4 @@ dist
 
 #Files actually added by me (not from the template lol)
 server/config.json
+releases/
