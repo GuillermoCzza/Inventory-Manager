@@ -16,7 +16,8 @@ To use this application, you will have to fill out a config.json file in the ser
 {
  "PORT": 3000, //the port on which you want to host the app
 
- "DATABASE_HOST": "***.***.***.***", //the address of the PSQL server, can be global or local. To host the database on the same computer just write "localhost".
+ "DATABASE_HOST": "***.***.***.***", //the address of the PSQL server, can be global or local.
+ //To host the database on the same computer just write "localhost".
  "DATABASE_PORT": 5432, //the port where the PSQL server is hosted. Default is 5432
  "DATABASE_NAME": "inventory_db", //name of the database. Will be created if not found
  "DATABASE_USER": "", //PSQL username
@@ -25,7 +26,8 @@ To use this application, you will have to fill out a config.json file in the ser
  "CONNECTION_TIMEOUT": 10000, //time for database connection attempts to time out
 
  "TEMPLATE_TABLE_NAME": "template_table", //name of the template table
- "TEMPLATE_TABLE_DATA_COLUMNS": ["nombre", "stock", "precio", "codigo"] //columns for the template table on creation. (DROP the template_table before changing this)
+ "TEMPLATE_TABLE_DATA_COLUMNS": ["nombre", "stock", "precio", "codigo"] //columns for the
+//template table on creation. (DROP the template_table before changing this)
 }
 ```
 
