@@ -33,7 +33,7 @@ To use this application, you will have to fill out a config.json file in the ser
 
 To start the app run start.bat in the server folder. Once this is done, you can access the application by entering "«host address»:«port»" (without quotation marks) in the URL bar of your preferred browser.
 
-**Note**: renaming the primary key column of the template table, or any other table in the database is not adviced. If for whatever reason you must do so, you should rename the IDENTIFIER_COLUMN field at client/src/clientConfig.json to match the new name (, run npm build in the client folder if you're using the source code,) and restart the application.
+**Note**: renaming the primary key column of the template table, or any other table in the database is not adviced. If for whatever reason you must do so, you have to download the source code, rename the IDENTIFIER_COLUMN field at client/src/clientConfig.json to match the new name, run npm build in the client folder, and restart the application.
 
 ## Running from files
 
