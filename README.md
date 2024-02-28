@@ -4,10 +4,6 @@ This is a PostgreSQL table manager made for the purposes of providing a simple i
 
 You must have [Node.js](https://nodejs.org/en) installed to run this. Also, make sure you have [PostgreSQL](https://www.postgresql.org/) installed at whatever computer you want to host the database.
 
-## Releases
-
-To be added
-
 ## Usage
 
 To use this application, you will have to fill out a config.json file in the server folder like this (without the comments):
